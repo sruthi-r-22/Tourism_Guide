@@ -83,7 +83,8 @@ bulk_destinations = [
     ),
     Destination(
         name="Lonavala", state="Maharashtra", season="Monsoon", budget=6500,
-        image_url="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=1200&q=80",
+        # FIXED: Updated fried chicken image path loop to scenic Western Ghats imagery stream 
+        image_url="https://images.unsplash.com/photo-1584810359583-96fc3448beaa?auto=format&fit=crop&w=1200&q=80",
         description="A beloved Western Ghats escape that comes alive under heavy rains with surging waterfalls, foggy mountain lookouts like Tiger's Point, and lush trekking trails."
     ),
     Destination(
