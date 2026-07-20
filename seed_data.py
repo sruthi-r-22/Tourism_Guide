@@ -3,7 +3,9 @@ import os
 import json
 import urllib.request
 import urllib.parse
+import urllib.error
 import time
+import ssl
 
 # Align paths perfectly
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -12,24 +14,41 @@ sys.path.append(BASE_DIR)
 from backend import app, db, Destination
 
 def get_wiki_image(place_name):
-    """Fetches the official main thumbnail image for a place directly from Wikipedia."""
-    try:
-        query = urllib.parse.quote(place_name)
-        url = f"https://en.wikipedia.org/w/api.php?action=query&titles={query}&prop=pageimages&format=json&pithumbsize=800"
-        
-        # Add headers to safely request from Wikipedia
-        req = urllib.request.Request(url, headers={'User-Agent': 'TourismApp/1.0 (Python)'})
-        with urllib.request.urlopen(req) as response:
-            data = json.loads(response.read().decode('utf-8'))
-            pages = data.get('query', {}).get('pages', {})
-            
-            for page_id, page_data in pages.items():
-                if 'thumbnail' in page_data:
-                    return page_data['thumbnail']['source']
-    except Exception as e:
-        pass
+    """Fetches image from Wikipedia and handles 429 Too Many Requests errors."""
+    query = urllib.parse.quote(place_name)
+    url = f"https://en.wikipedia.org/w/api.php?action=query&titles={query}&prop=pageimages&format=json&pithumbsize=800"
     
-    # Fallback only if Wikipedia doesn't have an image
+    # Using a unique User-Agent keeps Wikipedia from treating us like a malicious bot
+    headers = {'User-Agent': 'LocalTourismApp/1.0 (Learning Project) Python-urllib/3'}
+    req = urllib.request.Request(url, headers=headers)
+    
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    # Give it up to 3 tries to bypass the 429 error
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, context=ctx, timeout=10) as response:
+                data = json.loads(response.read().decode('utf-8'))
+                pages = data.get('query', {}).get('pages', {})
+                
+                for page_id, page_data in pages.items():
+                    if 'thumbnail' in page_data:
+                        return page_data['thumbnail']['source']
+                break # If successful but no image found, break the retry loop
+                
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                wait_time = 3  # Wait 3 seconds if Wikipedia says we are going too fast
+                print(f" [Slowing down...] ", end="")
+                time.sleep(wait_time)
+            else:
+                break
+        except Exception as e:
+            break
+            
+    # Fallback image only if all retries fail
     return "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=600&q=80"
 
 destinations_list = [
@@ -108,11 +127,17 @@ with app.app_context():
     db.drop_all()
     db.create_all()
     
-    print(f"Downloading verified images from Wikipedia for {len(destinations_list)} destinations. Please wait...")
+    print(f"Downloading images at a safe speed for {len(destinations_list)} destinations...")
     
     for name, state, season, budget, wiki_query in destinations_list:
-        print(f"[{season}] Securing image for: {name}...")
+        print(f"-> Fetching {name} ({season})...", end=" ")
+        
         img_url = get_wiki_image(wiki_query)
+        
+        if "unsplash" in img_url:
+            print("❌ FAILED (Used Fallback)")
+        else:
+            print("✅ SUCCESS")
         
         db.session.add(Destination(
             name=name,
@@ -123,8 +148,8 @@ with app.app_context():
             description=f"A spectacular 1-2 day getaway spot located in {state}, perfect for an immersive {season.lower()} experience."
         ))
         
-        # Adding a tiny pause so Wikipedia doesn't block our requests
-        time.sleep(0.1) 
+        # Hard pause of 1.5 seconds between every single request to keep Wikipedia happy
+        time.sleep(1.5) 
         
     db.session.commit()
-    print("🎉 Success! Database completely rebuilt with real-world Wikipedia images.")
+    print("\n🎉 Sync Complete! The database is safely loaded.")
