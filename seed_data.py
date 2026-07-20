@@ -1,11 +1,10 @@
 import sys
 import os
 
-# Ensure the parent directory is in the path so we can import frontend
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from frontend import app, db, Destination
+# Appending system path mapping configurations to resolve parent model imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from backend import app, db, Destination
 
-# Production-grade starter kit containing verified, high-availability direct imagery paths
 bulk_destinations = [
     # === WINTER DESTINATIONS ===
     Destination(
@@ -68,7 +67,7 @@ bulk_destinations = [
         description="A monsoon haven featuring misty treehouse resorts, intense green forest canopies, historical Edakkal Caves exploration, and Banasura Sagar dam vistas."
     ),
     Destination(
-        name="Lonavala", state="Karnataka", season="Monsoon", budget=6500,
+        name="Lonavala", state="Maharashtra", season="Monsoon", budget=6500,
         image_url="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=1200&q=80",
         description="A beloved Western Ghats escape that comes alive under heavy rains with surging waterfalls, foggy mountain lookouts like Tiger's Point, and lush trekking trails."
     ),
@@ -92,28 +91,9 @@ bulk_destinations = [
 ]
 
 with app.app_context():
-    print("Connecting to live database environment...")
+    print("Purging storage cache and setting up a clean layout...")
+    db.session.query(Destination).delete()
     
-    # Optional: If you want to purge old entries with broken links, uncomment the line below:
-    # db.session.query(Destination).delete()
-    
-    added_count = 0
-    updated_count = 0
-    
-    for place in bulk_destinations:
-        exists = Destination.query.filter_by(name=place.name).first()
-        if not exists:
-            db.session.add(place)
-            added_count += 1
-            print(f"-> Prepared record for {place.name}")
-        else:
-            # Overwrite the table properties to push the functional images into the live SQLite engine
-            exists.state = place.state
-            exists.season = place.season
-            exists.budget = place.budget
-            exists.image_url = place.image_url
-            exists.description = place.description
-            updated_count += 1
-            
+    db.session.add_all(bulk_destinations)
     db.session.commit()
-    print(f"\n🎉 Sync Complete! Added {added_count} new entries and successfully synchronized {updated_count} images inside tourism.db!")
+    print(f"🎉 Database Synced Successfully! Added {len(bulk_destinations)} destinations.")

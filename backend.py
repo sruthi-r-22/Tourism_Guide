@@ -4,13 +4,13 @@ import os
 
 app = Flask(__name__)
 
-# Configure local SQLite instances path variables
+# Configure local SQLite database path
 db_path = os.path.join(os.path.dirname(__file__), 'tourism.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Relational mapping schema structural model
+# Database structural model
 class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
@@ -31,30 +31,9 @@ class Destination(db.Model):
             "description": self.description
         }
 
-# Automatically initialize structures and drop core seed records if table is blank
+# Automatically initialize structures
 with app.app_context():
     db.create_all()
-    
-    if not Destination.query.first():
-        seed_places = [
-            Destination(
-                name="Ooty", state="Tamil Nadu", season="Summer", budget=8000,
-                image_url="https://blog.rideally.com/wp-content/uploads/2022/05/Ooty.jpg",
-                description="Ooty is one of India's most famous hill stations. Known for tea plantations, Botanical Gardens, Doddabetta Peak, and Ooty Lake boating rides."
-            ),
-            Destination(
-                name="Goa", state="Goa", season="Winter", budget=12000,
-                image_url="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=900&q=80",
-                description="Goa is India's most popular coastal destination. Features beautiful sandy Baga beaches, historic Fort Aguada lines, and vibrant nightlife options."
-            ),
-            Destination(
-                name="Munnar", state="Kerala", season="Monsoon", budget=8500,
-                image_url="https://i.pinimg.com/736x/f6/66/b5/f666b51c07f0ac06594f60050e9a068e.jpg",
-                description="Munnar is a majestic green hill station escape. Celebrated for sprawling Tea Museums, mist-covered Eravikulam valleys, and roaring waterfalls."
-            )
-        ]
-        db.session.add_all(seed_places)
-        db.session.commit()
 
 # --- WEB AND API APP ROUTES ---
 
@@ -69,15 +48,19 @@ def get_destinations():
 
 @app.route('/add-destination', methods=['POST'])
 def add_destination():
-    name = request.form.get('name')
-    state = request.form.get('state')
-    season = request.form.get('season')
-    budget = request.form.get('budget')
-    image_url = request.form.get('image_url')
-    description = request.form.get('description')
+    # Accept standardized JSON payloads natively
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Missing application/json request body."}), 400
 
-    if name and state and season and budget:
-        # Create record instance tracking layout arguments
+    name = data.get('name')
+    state = data.get('state')
+    season = data.get('season')
+    budget = data.get('budget')
+    image_url = data.get('image_url')
+    description = data.get('description')
+
+    if name and state and season and budget and description:
         new_place = Destination(
             name=name.strip(),
             state=state.strip(),
@@ -89,11 +72,12 @@ def add_destination():
         try:
             db.session.add(new_place)
             db.session.commit()
+            return jsonify({"success": True, "message": "Record committed successfully!"}), 201
         except Exception as e:
             db.session.rollback()
-            print(f"Error handling transactional database commit: {e}")
+            return jsonify({"error": f"Database write conflict: {str(e)}"}), 400
             
-    return redirect(url_for('home'))
+    return jsonify({"error": "Missing one or more required destination fields."}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate India Tourism Guide | Database Connected SPA</title>
-
-    <!-- Google Font -->
+    <title>Ultimate India Tourism Guide</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -29,9 +27,6 @@
             min-height: 100vh;
         }
 
-        /* ==========================================
-            GLOBAL FIXED NAVIGATION HEADER
-        ========================================== */
         header {
             position: fixed;
             top: 0;
@@ -72,7 +67,6 @@
             color: #FFD166;
         }
 
-        /* SPA View Management Display Rules */
         .spa-view {
             display: none;
             padding-top: 75px;
@@ -82,7 +76,6 @@
             display: block;
         }
 
-        /* Shared Component Section Headers */
         .hero-banner {
             background: linear-gradient(to right, #0F4C81, #1F7A8C);
             color: white;
@@ -99,14 +92,11 @@
             font-size: 18px;
         }
 
-        /* ==========================================
-            HOME VIEW STYLES
-        ========================================== */
         .home-hero {
             width: 100%;
             height: calc(100vh - 75px);
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-                url("https://th-thumbnailer.cdn-si-edu.com/XqxgmNXYJlEampO1iCKXBj4X0Tw=/1280x1280/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/45/3b/453b8165-0d4e-4372-a55a-46d4b9cfdfe1/taj_mahal.jpg");
+                url("https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80");
             background-size: cover;
             background-position: center;
             display: flex;
@@ -310,9 +300,6 @@
             margin-bottom: 8px;
         }
 
-        /* ==========================================
-            EXPLORE VIEW STYLES
-        ========================================== */
         .page-title {
             text-align: center;
             padding: 40px 20px 10px;
@@ -507,14 +494,6 @@
             background: #0F4C81;
         }
 
-        .explore-card.card-overbudget button {
-            background: #777;
-            cursor: not-allowed;
-        }
-
-        /* ==========================================
-            DETAILS VIEW STYLES
-        ========================================== */
         .back-container {
             width: 90%;
             max-width: 1200px;
@@ -597,27 +576,6 @@
             text-align: justify;
         }
 
-        .list-section {
-            margin-bottom: 35px;
-        }
-
-        .list-section h2 {
-            color: #0F4C81;
-            margin-bottom: 15px;
-        }
-
-        .list-section ul {
-            padding-left: 25px;
-        }
-
-        .list-section li {
-            margin-bottom: 10px;
-            line-height: 1.8;
-        }
-
-        /* ==========================================
-            GALLERY VIEW STYLES
-        ========================================== */
         .gallery-grid {
             width: 90%;
             max-width: 1300px;
@@ -660,9 +618,6 @@
             color: #555;
         }
 
-        /* ==========================================
-            CONTACT & ADMIN FORM STYLES
-        ========================================== */
         .contact-container {
             width: 90%;
             max-width: 1200px;
@@ -818,7 +773,6 @@
 
 <body>
 
-    <!-- GLOBAL FIXED HEADER NAVIGATION -->
     <header>
         <div class="logo" onclick="showView('home')">Tourism Guide</div>
         <nav>
@@ -832,9 +786,7 @@
         </nav>
     </header>
 
-    <!-- ========================================================
-        1. HOME VIEW 
-    ========================================================= -->
+    <!-- 1. HOME VIEW -->
     <div id="homeView" class="spa-view active-view">
         <section class="home-hero">
             <div class="home-hero-content">
@@ -849,24 +801,7 @@
 
         <section class="popular">
             <h2 class="title">Popular Destinations</h2>
-            <div class="card-container" id="popularContainer">
-                <div class="home-card" onclick="goToDetails('Ooty')">
-                    <img src="https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?auto=format&fit=crop&w=800&q=80" alt="Ooty" onerror="this.onerror=null; this.src=DEFAULT_FALLBACK_IMAGE;">
-                    <div class="home-card-content">
-                        <h3>Ooty</h3>
-                        <p>Famous for tea gardens, pleasant climate and beautiful lakes.</p>
-                        <div class="price">₹8,000</div>
-                    </div>
-                </div>
-                <div class="home-card" onclick="goToDetails('Goa')">
-                    <img src="https://images.unsplash.com/photo-1540206395-68808572332f?auto=format&fit=crop&w=800&q=80" alt="Goa" onerror="this.onerror=null; this.src=DEFAULT_FALLBACK_IMAGE;">
-                    <div class="home-card-content">
-                        <h3>Goa</h3>
-                        <p>Beautiful beaches, vibrant nightlife, and Portuguese architecture.</p>
-                        <div class="price">₹12,000</div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-container" id="popularContainer"></div>
         </section>
 
         <section class="why">
@@ -915,30 +850,9 @@
                 </div>
             </div>
         </section>
-
-        <section class="stats">
-            <div class="stat-box">
-                <h2>50+</h2>
-                <p>Tourist Places</p>
-            </div>
-            <div class="stat-box">
-                <h2>28</h2>
-                <p>Indian States</p>
-            </div>
-            <div class="stat-box">
-                <h2>5</h2>
-                <p>Travel Seasons</p>
-            </div>
-            <div class="stat-box">
-                <h2>100%</h2>
-                <p>Free Guide</p>
-            </div>
-        </section>
     </div>
 
-    <!-- ========================================================
-        2. EXPLORE / DISCOVER PLACES VIEW
-    ========================================================= -->
+    <!-- 2. EXPLORE VIEW -->
     <div id="exploreView" class="spa-view">
         <section class="page-title">
             <h1>Explore Famous Destinations</h1>
@@ -947,7 +861,7 @@
 
         <section class="filters">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search destination (e.g., Hyderabad, Manali, Goa) or type a season to view options...">
+                <input type="text" id="searchInput" placeholder="Search destination or type a season to view options...">
                 <div id="recommendationOutput" class="recommendation-box"></div>
             </div>
 
@@ -979,9 +893,7 @@
         <section class="destinations" id="destinationContainer"></section>
     </div>
 
-    <!-- ========================================================
-        3. DYNAMIC DETAILS VIEW
-    ========================================================= -->
+    <!-- 3. DYNAMIC DETAILS VIEW -->
     <div id="detailsView" class="spa-view">
         <div class="back-container">
             <a class="back-link" onclick="showView('explore')">← Back to Explore</a>
@@ -1002,40 +914,26 @@
                         <h3>💰 Estimated Budget</h3>
                         <p id="placeBudget"></p>
                     </div>
-                    <div class="info-card">
-                        <h3>⭐ Main Attraction</h3>
-                        <p id="placeAttraction"></p>
-                    </div>
                 </div>
 
                 <div class="description">
                     <h2>Description</h2>
                     <p id="placeDescription"></p>
                 </div>
-
-                <div class="list-section">
-                    <h2>Top Attractions</h2>
-                    <ul id="topAttractions"></ul>
-                </div>
             </div>
         </section>
     </div>
 
-    <!-- ========================================================
-        4. GALLERY VIEW
-    ========================================================= -->
+    <!-- 4. GALLERY VIEW -->
     <div id="galleryView" class="spa-view">
         <section class="hero-banner">
             <h1>Destination Gallery</h1>
             <p>Explore the beauty of India's most famous tourist destinations.</p>
         </section>
-        
         <section class="gallery-grid" id="galleryContainer"></section>
     </div>
 
-    <!-- ========================================================
-        5. FUTURE UPDATES & DATABASE PANEL VIEW
-    ========================================================= -->
+    <!-- 5. UPDATES / ADMIN PANEL VIEW -->
     <div id="updatesView" class="spa-view">
         <section class="hero-banner">
             <h1>Database Administration Panel</h1>
@@ -1057,33 +955,18 @@
                         <option value="Spring">Spring</option>
                     </select>
 
-                    <input type="number" id="formBudget" name="budget" placeholder="Estimated Structural Budget Cost (₹)" min="1000" required>
-                    <input type="url" id="formImageUrl" name="image_url" placeholder="Secure Resource Image link URL Path">
-                    <textarea id="formDesc" name="description" placeholder="Provide complete summary attributes and highlight top local historical attractions..." required></textarea>
+                    <input type="number" id="formBudget" name="budget" placeholder="Estimated Budget Cost (₹)" min="1000" required>
+                    <input type="url" id="formImageUrl" name="image_url" placeholder="Secure Image Link URL">
+                    <textarea id="formDesc" name="description" placeholder="Provide complete summary specifications..." required></textarea>
                     
                     <button type="submit">Commit to Database</button>
                     <div id="formStatusMessage"></div>
                 </form>
             </div>
         </div>
-
-        <section class="updates-grid">
-            <div class="update-card">
-                <h3>🌍 New Destinations</h3>
-                <p>More beautiful destinations from different regions will be added soon with detailed information, travel tips, and attractions.</p>
-                <div class="date">System Active</div>
-            </div>
-            <div class="update-card">
-                <h3>⭐ User Reviews</h3>
-                <p>Visitors will soon be able to share their travel experiences, ratings, and suggestions for different destinations.</p>
-                <div class="date">Coming Soon</div>
-            </div>
-        </section>
     </div>
 
-    <!-- ========================================================
-        6. CONTACT VIEW
-    ========================================================= -->
+    <!-- 6. CONTACT VIEW -->
     <div id="contactView" class="spa-view">
         <section class="hero-banner">
             <h1>Contact Us</h1>
@@ -1096,7 +979,6 @@
                 <p>📍 <strong>Location:</strong> Hyderabad, Telangana, India</p>
                 <p>📧 <strong>Email:</strong> tourismguide@gmail.com</p>
                 <p>📞 <strong>Phone:</strong> +91 73967 60558</p>
-                <p>🕒 <strong>Working Hours:</strong><br>Monday - Saturday<br>9:00 AM - 6:00 PM</p>
                 <p>Feel free to contact us for suggestions, queries or future collaborations.</p>
             </div>
 
@@ -1114,16 +996,12 @@
     </div>
 
     <footer>
-        <p>©️ 2026 Tourism Guide | Educational Project | Explore • Discover • Experience</p>
+        <p>©️ 2026 Tourism Guide | Educational Project</p>
     </footer>
 
-    <!-- ========================================================
-        APPLICATION DATA & CONTROLLER LOGIC
-    ========================================================= -->
     <script>
         let destinationData = {};
 
-        // DOM Element Selectors
         const container = document.getElementById("destinationContainer");
         const galleryContainer = document.getElementById("galleryContainer");
         const popularContainer = document.getElementById("popularContainer");
@@ -1138,11 +1016,8 @@
         const seasonButtons = document.querySelectorAll(".season-btn");
 
         let selectedSeasonFilter = "All";
-
-        // Global High-Availability Image Fallback Resource
         const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?auto=format&fit=crop&w=800&q=80";
 
-        // SPA View Manager Switch Logic
         function showView(viewId) {
             document.querySelectorAll('.spa-view').forEach(view => {
                 view.classList.remove('active-view');
@@ -1152,14 +1027,11 @@
             window.scrollTo(0, 0);
         }
 
-        // Home dashboard clicking option loads items via search integration
         function searchFromHome(seasonName) {
             showView('explore');
-            searchInput.value = seasonName;
-            filterPlaces();
+            setSeasonOverride(seasonName);
         }
 
-        // Manual visual toggle row function
         function setSeasonOverride(seasonName) {
             selectedSeasonFilter = seasonName;
             seasonButtons.forEach(btn => {
@@ -1169,7 +1041,6 @@
             filterPlaces();
         }
 
-        // Async Loader fetching models from Python Flask server API Endpoint
         async function loadDestinationsFromDB() {
             try {
                 const response = await fetch('/api/destinations');
@@ -1186,14 +1057,12 @@
                         season: item.season,
                         budget: item.budget,
                         budgetText: `₹${item.budget.toLocaleString('en-IN')}`,
-                        attraction: item.description ? item.description.split('.')[0] : "Local Sites",
                         description: item.description || "No description provided."
                     };
                     prices.push(item.budget);
                     if (item.state) statesSet.add(item.state.trim());
                 });
 
-                // RECTIFIED: Update State Select Filter Dropdown options dynamically based on live database values
                 const currentSelectedState = stateFilter.value;
                 stateFilter.innerHTML = `<option value="All">All States</option>`;
                 
@@ -1225,18 +1094,17 @@
                 buildGallery();
                 buildPopularBanner();
             } catch (err) {
-                console.error("Database connection dropped down:", err);
-                resultCount.innerText = "Error loading structural database variables.";
+                console.error("Database initialization connection error:", err);
+                resultCount.innerText = "Error loading database assets.";
             }
         }
 
-        // Render Cards inside the Explore Grid Layout
         function displayPlaces(dataList) {
             container.innerHTML = "";
             resultCount.innerText = `Showing ${dataList.length} Destinations`;
 
             if(dataList.length === 0) {
-                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">No matching destinations found in storage.</p>`;
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">No matching destinations found.</p>`;
                 return;
             }
 
@@ -1248,19 +1116,18 @@
                 if (item.isOverBudget) {
                     cardClass += " card-overbudget";
                     badgeMarkup = `<div class="budget-warning-badge">+₹${item.deficit.toLocaleString('en-IN')} Short</div>`;
-                    buttonMarkup = `<button style="background: #777; cursor: not-allowed;" disabled>🔒 Above Current Slider Budget</button>`;
+                    buttonMarkup = `<button style="background: #777; cursor: not-allowed;" disabled>🔒 Above Budget</button>`;
                 }
 
                 container.innerHTML += `
                     <div class="${cardClass}">
                         ${badgeMarkup}
-                        <!-- RECTIFIED: Added online runtime link protection circuit loop -->
                         <img src="${item.data.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
                         <div class="explore-card-content">
                             <h3>${item.name}</h3>
                             <p><strong>📍 State:</strong> ${item.data.state}</p>
-                            <p><strong>🌤️ Recommended Season:</strong> <span style="color: #0F4C81; font-weight: 600;">${item.data.season}</span></p>
-                            <p><strong>💰 Required Base Budget:</strong> ${item.data.budgetText}</p>
+                            <p><strong>🌤️ Season:</strong> <span style="color: #0F4C81; font-weight: 600;">${item.data.season}</span></p>
+                            <p><strong>💰 Budget:</strong> ${item.data.budgetText}</p>
                             ${buttonMarkup}
                         </div>
                     </div>
@@ -1268,81 +1135,10 @@
             });
         }
 
-        // Dynamic Advisor Recommendation Logic
-        function handleRecommendations(searchVal, maxBudget) {
-            seasonButtons.forEach(btn => btn.classList.remove("active"));
-            
-            if (!searchVal) {
-                const matchAllBtn = document.querySelector('[data-season="All"]');
-                if (matchAllBtn && selectedSeasonFilter === "All") matchAllBtn.classList.add("active");
-                recommendationOutput.innerHTML = "";
-                recommendationOutput.style.padding = "0";
-                return;
-            }
-
-            const exactKey = Object.keys(destinationData).find(
-                key => key.toLowerCase() === searchVal.toLowerCase()
-            );
-
-            if (!exactKey) {
-                const matchesSeasonKeyword = ["summer", "monsoon", "winter", "spring"].includes(searchVal.toLowerCase());
-                if(matchesSeasonKeyword) {
-                    const matchedSeason = searchVal.charAt(0).toUpperCase() + searchVal.slice(1).toLowerCase();
-                    const trackerBtn = document.querySelector(`[data-season="${matchedSeason}"]`);
-                    if(trackerBtn) trackerBtn.classList.add("active");
-                    
-                    recommendationOutput.style.padding = "12px";
-                    recommendationOutput.innerHTML = `
-                        <div style="color: #0F4C81; font-size: 14px;">
-                            🌤️ Displaying all destinations whose ideal recommended season is <strong>${matchedSeason}</strong>!
-                        </div>
-                    `;
-                    return;
-                }
-
-                const fallbackBtn = document.querySelector(`[data-season="${selectedSeasonFilter}"]`);
-                if(fallbackBtn) fallbackBtn.classList.add("active");
-
-                recommendationOutput.style.padding = "12px";
-                recommendationOutput.innerHTML = `
-                    <div style="color: #666; font-size: 14px;">
-                        🔍 Searching data models... Try typing **Hyderabad**, **Manali**, or **Winter**!
-                    </div>
-                `;
-                return;
-            }
-
-            const targetPlace = destinationData[exactKey];
-            recommendationOutput.style.padding = "16px";
-
-            const targetSeasonBtn = document.querySelector(`[data-season="${targetPlace.season}"]`);
-            if(targetSeasonBtn) targetSeasonBtn.classList.add("active");
-
-            if (maxBudget >= targetPlace.budget) {
-                recommendationOutput.innerHTML = `
-                    <div style="background-color: #e6f4ea; border-left: 5px solid #34a853; padding: 12px; border-radius: 6px; font-size: 14px; color: #137333;">
-                        🎉 <strong>Perfect Match!</strong> The budget you set (<strong>₹${maxBudget.toLocaleString('en-IN')}</strong>) covers the base cost for <strong>${exactKey}</strong>.<br>
-                        🌤️ <strong>Season Recommendation:</strong> We highly recommend visiting during the <strong style="text-decoration: underline;">${targetPlace.season}</strong> season to experience the best conditions!
-                    </div>
-                `;
-            } else {
-                recommendationOutput.innerHTML = `
-                    <div style="background-color: #fce8e6; border-left: 5px solid #ea4335; padding: 12px; border-radius: 6px; font-size: 14px; color: #c5221f;">
-                        ⚠️ <strong>Budget Cap Restriction:</strong> The budget you set (<strong>₹${maxBudget.toLocaleString('en-IN')}</strong>) falls short of the required <strong>₹${targetPlace.budget.toLocaleString('en-IN')}</strong> entry baseline.<br>
-                        📉 <strong>Recommendation:</strong> Add an extra <strong>₹${(targetPlace.budget - maxBudget).toLocaleString('en-IN')}</strong> to unlock this destination.<br>
-                        🌤️ <strong>Ideal Season:</strong> When ready, plan your trip for the stunning <strong>${targetPlace.season}</strong> views!
-                    </div>
-                `;
-            }
-        }
-
-        // Filter Execution Loop Logic
         function filterPlaces() {
             const search = searchInput.value.toLowerCase().trim();
             const state = stateFilter.value;
-            const maxBudget = parseInt(budgetRange.value) || 25000;
-
-            handleRecommendations(searchInput.value.trim(), maxBudget);
+            const maxBudget = parseInt(budgetRange.value) || 50000;
 
             const filtered = Object.keys(destinationData).map(key => {
                 const dataObj = destinationData[key];
@@ -1358,7 +1154,7 @@
                 const matchState = state === "All" || item.data.state === state;
                 
                 let matchSeasonRow = true;
-                if (selectedSeasonFilter !== "All" && !search) {
+                if (selectedSeasonFilter !== "All") {
                     matchSeasonRow = item.data.season === selectedSeasonFilter;
                 }
 
@@ -1375,39 +1171,22 @@
             const detailImg = document.getElementById("placeImage");
             detailImg.src = place.image;
             detailImg.alt = placeName;
-            detailImg.onerror = function() { this.src = DEFAULT_FALLBACK_IMAGE; };
 
             document.getElementById("placeName").innerHTML = placeName;
             document.getElementById("placeState").innerHTML = `📍 State: ${place.state}`;
             document.getElementById("placeSeason").innerHTML = place.season;
             document.getElementById("placeBudget").innerHTML = place.budgetText;
-            document.getElementById("placeAttraction").innerHTML = place.attraction;
             document.getElementById("placeDescription").innerHTML = place.description;
-
-            const topList = document.getElementById("topAttractions");
-            topList.innerHTML = "";
-            const features = place.description.split(',');
-            features.forEach(feat => {
-                if(feat.trim().length > 2){
-                    const li = document.createElement("li");
-                    li.innerHTML = feat.trim();
-                    topList.appendChild(li);
-                }
-            });
 
             showView('details');
         }
 
         function buildGallery() {
             galleryContainer.innerHTML = "";
-            const keys = Object.keys(destinationData);
-            if(keys.length === 0) return;
-            
-            keys.forEach(key => {
+            Object.keys(destinationData).forEach(key => {
                 const place = destinationData[key];
                 galleryContainer.innerHTML += `
                     <div class="image-card" onclick="goToDetails('${key}')">
-                        <!-- RECTIFIED: Added secure fallback image loop -->
                         <img src="${place.image}" alt="${key}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
                         <div class="image-info">
                             <h3>${key}</h3>
@@ -1423,15 +1202,15 @@
             if(keys.length === 0) return;
             popularContainer.innerHTML = "";
             
+            // Slice the first 3 items safely to display on the landing homepage preview component
             keys.slice(0, 3).forEach(key => {
                 const place = destinationData[key];
                 popularContainer.innerHTML += `
                     <div class="home-card" onclick="goToDetails('${key}')">
-                        <!-- RECTIFIED: Added secure fallback image loop -->
                         <img src="${place.image}" alt="${key}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
                         <div class="home-card-content">
                             <h3>${key}</h3>
-                            <p>${place.attraction}</p>
+                            <p>${place.description.substring(0, 75)}...</p>
                             <div class="price">${place.budgetText}</div>
                         </div>
                     </div>
@@ -1442,51 +1221,40 @@
         dbConsoleForm.addEventListener("submit", async function(e) {
             e.preventDefault();
             
-            const formData = new URLSearchParams();
-            formData.append('name', document.getElementById('formName').value.trim());
-            formData.append('state', document.getElementById('formState').value.trim());
-            formData.append('season', document.getElementById('formSeason').value);
-            formData.append('budget', document.getElementById('formBudget').value);
-            formData.append('image_url', document.getElementById('formImageUrl').value.trim());
-            formData.append('description', document.getElementById('formDesc').value.trim());
+            const payload = {
+                name: document.getElementById('formName').value.trim(),
+                state: document.getElementById('formState').value.trim(),
+                season: document.getElementById('formSeason').value,
+                budget: parseInt(document.getElementById('formBudget').value),
+                image_url: document.getElementById('formImageUrl').value.trim(),
+                description: document.getElementById('formDesc').value.trim()
+            };
 
             try {
                 formStatusMessage.style.display = "block";
-                formStatusMessage.style.backgroundColor = "#fff3cd";
-                formStatusMessage.style.color = "#856404";
-                formStatusMessage.innerText = "Committing to local SQLite storage engine...";
+                formStatusMessage.innerText = "Processing submission payload transaction...";
 
                 const response = await fetch('/add-destination', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData.toString()
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
 
                 if (response.ok) {
-                    formStatusMessage.style.backgroundColor = "#d4edda";
-                    formStatusMessage.style.color = "#155724";
-                    formStatusMessage.innerText = "🎉 Record committed successfully to SQLite store!";
-                    
+                    formStatusMessage.innerText = "🎉 Record saved successfully!";
                     dbConsoleForm.reset();
                     await loadDestinationsFromDB();
-                    setTimeout(() => { formStatusMessage.style.display = "none"; }, 4000);
+                    setTimeout(() => { formStatusMessage.style.display = "none"; }, 3000);
                 } else {
-                    throw new Error("Server rejected record payload mapping specifications.");
+                    throw new Error("Server error writing data.");
                 }
             } catch (err) {
-                console.error("Storage error:", err);
-                formStatusMessage.style.backgroundColor = "#f8d7da";
-                formStatusMessage.style.color = "#721c24";
-                formStatusMessage.innerText = "❌ Connection error: Could not save attributes.";
+                formStatusMessage.innerText = "❌ Error processing submission.";
             }
         });
 
-        // Event Registration Hooks
         searchInput.addEventListener("input", filterPlaces);
         stateFilter.addEventListener("change", filterPlaces);
-        
         budgetRange.addEventListener("input", () => {
             budgetRange.dataset.userHasTouched = "true";
             budgetValue.innerText = `₹${parseInt(budgetRange.value).toLocaleString('en-IN')}`;
@@ -1495,12 +1263,11 @@
 
         document.getElementById("contactForm").addEventListener("submit", function (e) {
             e.preventDefault();
-            alert("Thank you! Feedback received successfully.");
+            alert("Feedback received successfully!");
             this.reset();
         });
 
         window.addEventListener('DOMContentLoaded', loadDestinationsFromDB);
     </script>
 </body>
-
 </html>
