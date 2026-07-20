@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate India Tourism Guide | Database Connected SPA</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+            GLOBAL FIXED NAVIGATION HEADER
+        ========================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 8%;
+            background: rgba(15, 76, 129, 0.96);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        nav ul li a:hover {
+            color: #FFD166;
+        }
+
+        /* SPA View Management Display Rules */
+        .spa-view {
+            display: none;
+            padding-top: 75px;
+        }
+
+        .spa-view.active-view {
+            display: block;
+        }
+
+        /* Shared Component Section Headers */
+        .hero-banner {
+            background: linear-gradient(to right, #0F4C81, #1F7A8C);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero-banner h1 {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .hero-banner p {
+            font-size: 18px;
+        }
+
+        /* ==========================================
+            HOME VIEW STYLES
+        ========================================== */
+        .home-hero {
+            width: 100%;
+            height: calc(100vh - 75px);
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                url("https://th-thumbnailer.cdn-si-edu.com/XqxgmNXYJlEampO1iCKXBj4X0Tw=/1280x1280/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/45/3b/453b8165-0d4e-4372-a55a-46d4b9cfdfe1/taj_mahal.jpg");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .home-hero-content {
+            width: 80%;
+            max-width: 900px;
+        }
+
+        .home-hero h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .home-hero p {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: #F97316;
+            color: white;
+            text-decoration: none;
+            border-radius: 35px;
+            transition: .3s;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            background: #00B4D8;
+            transform: translateY(-4px);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 38px;
+            color: #0F4C81;
+            margin-bottom: 45px;
+            font-weight: 700;
+        }
+
+        .popular {
+            padding: 80px 8%;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .home-card {
+            width: 320px;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.07);
+            transition: .4s;
+            cursor: pointer;
+        }
+
+        .home-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .home-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .home-card-content {
+            padding: 20px;
+        }
+
+        .home-card h3 {
+            color: #0F4C81;
+            margin-bottom: 12px;
+        }
+
+        .home-card p {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .price {
+            color: #F97316;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+
+        .why {
+            padding: 80px 8%;
+            background: #EEF7FF;
+        }
+
+        .why-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .why-card {
+            width: 320px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+            transition: .4s;
+        }
+
+        .why-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        .why-card h3 {
+            color: #0F4C81;
+            margin-bottom: 15px;
+        }
+
+        .season {
+            padding: 80px 8%;
+        }
+
+        .season-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .season-card {
+            width: 200px;
+            height: 220px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: .4s;
+            cursor: pointer;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .season-card:hover {
+            background: #00B4D8;
+            color: white;
+            transform: translateY(-8px) scale(1.03);
+        }
+
+        .season-card:hover h3, .season-card:hover p {
+            color: white;
+        }
+
+        .emoji {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .season-card h3 { color: #0F4C81; margin-bottom: 5px; }
+        .season-card p { color: #666; font-size: 14px; }
+
+        .stats {
+            background: #0F4C81;
+            color: white;
+            padding: 70px 8%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-box h2 {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================
+            EXPLORE VIEW STYLES
+        ========================================== */
+        .page-title {
+            text-align: center;
+            padding: 40px 20px 10px;
+        }
+
+        .page-title h1 {
+            color: #0F4C81;
+            font-size: 42px;
+        }
+
+        .page-title p {
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .filters {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        }
+
+        .search-box {
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #0F4C81;
+        }
+
+        .recommendation-box {
+            margin-top: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-title {
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #0F4C81;
+        }
+
+        .season-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .season-btn {
+            border: none;
+            padding: 10px 22px;
+            background: #EAF4FF;
+            color: #0F4C81;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: .3s;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .season-btn:hover, .season-btn.active {
+            background: #0F4C81;
+            color: white;
+        }
+
+        .state-filter {
+            margin-bottom: 25px;
+        }
+
+        .state-filter select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            background: white;
+        }
+
+        .budget-filter {
+            margin-bottom: 20px;
+        }
+
+        #budgetRange {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #budgetValue {
+            margin-top: 8px;
+            font-weight: 600;
+            color: #F97316;
+        }
+
+        #resultCount {
+            margin-top: 20px;
+            color: #0F4C81;
+            font-weight: 600;
+        }
+
+        .destinations {
+            width: 90%;
+            max-width: 1300px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .explore-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+            transition: .3s;
+            position: relative;
+        }
+
+        .explore-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .explore-card.card-overbudget {
+            opacity: 0.65;
+            filter: grayscale(30%);
+            border: 2px dashed #ea4335;
+        }
+
+        .budget-warning-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ea4335;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .explore-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .explore-card-content {
+            padding: 22px;
+        }
+
+        .explore-card h3 {
+            color: #0F4C81;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .explore-card p {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .explore-card button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #F97316;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .explore-card button:hover {
+            background: #0F4C81;
+        }
+
+        .explore-card.card-overbudget button {
+            background: #777;
+            cursor: not-allowed;
+        }
+
+        /* ==========================================
+            DETAILS VIEW STYLES
+        ========================================== */
+        .back-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto 15px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #0F4C81;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .details {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 50px auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .place-name {
+            font-size: 42px;
+            color: #0F4C81;
+            margin-bottom: 10px;
+        }
+
+        .state {
+            color: #777;
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: #F7FAFF;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+        }
+
+        .info-card h3 {
+            color: #0F4C81;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            line-height: 1.8;
+        }
+
+        .description {
+            margin-bottom: 40px;
+        }
+
+        .description h2 {
+            color: #0F4C81;
+            margin-bottom: 15px;
+        }
+
+        .description p {
+            line-height: 1.9;
+            text-align: justify;
+        }
+
+        .list-section {
+            margin-bottom: 35px;
+        }
+
+        .list-section h2 {
+            color: #0F4C81;
+            margin-bottom: 15px;
+        }
+
+        .list-section ul {
+            padding-left: 25px;
+        }
+
+        .list-section li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        /* ==========================================
+            GALLERY VIEW STYLES
+        ========================================== */
+        .gallery-grid {
+            width: 90%;
+            max-width: 1300px;
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .image-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .image-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .image-info h3 {
+            color: #0F4C81;
+            margin-bottom: 10px;
+        }
+
+        .image-info p {
+            color: #555;
+        }
+
+        /* ==========================================
+            CONTACT & ADMIN FORM STYLES
+        ========================================== */
+        .contact-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 60px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+        }
+
+        .contact-info h2 {
+            color: #0F4C81;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            margin-bottom: 18px;
+            line-height: 1.8;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+        }
+
+        .contact-form h2 {
+            color: #0F4C81;
+            margin-bottom: 20px;
+        }
+
+        .contact-form input, .contact-form textarea, .contact-form select {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .contact-form textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        .contact-form button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: #F97316;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        .contact-form button:hover {
+            background: #0F4C81;
+        }
+
+        #formStatusMessage {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .updates-grid {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .update-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .update-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .update-card h3 {
+            color: #0077b6;
+            margin-bottom: 15px;
+        }
+
+        .update-card p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .date {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        footer {
+            background: #0F4C81;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: auto;
+        }
+
+        @media(max-width: 992px) {
+            .home-hero h1 { font-size: 48px; }
+            .contact-container { grid-template-columns: 1fr; }
+        }
+
+        @media(max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 12px;
+            }
+            .spa-view { padding-top: 130px; }
+            .home-hero { height: calc(100vh - 130px); }
+            .home-hero h1 { font-size: 34px; }
+            .home-hero p { font-size: 16px; }
+            .title, .hero-banner h1 { font-size: 30px; }
+            .hero-image { height: 260px; }
+            .place-name { font-size: 32px; }
+            .content { padding: 25px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- GLOBAL FIXED HEADER NAVIGATION -->
+    <header>
+        <div class="logo" onclick="showView('home')">Tourism Guide</div>
+        <nav>
+            <ul>
+                <li><a onclick="showView('home')">Home</a></li>
+                <li><a onclick="showView('explore')">Explore</a></li>
+                <li><a onclick="showView('gallery')">Gallery</a></li>
+                <li><a onclick="showView('updates')">Updates</a></li>
+                <li><a onclick="showView('contact')">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ========================================================
+        1. HOME VIEW 
+    ========================================================= -->
+    <div id="homeView" class="spa-view active-view">
+        <section class="home-hero">
+            <div class="home-hero-content">
+                <h1>Explore India Like Never Before</h1>
+                <p>
+                    Discover India's most beautiful tourist destinations based on the best season to visit. 
+                    Find famous attractions, estimate your travel budget, and plan your perfect vacation effortlessly.
+                </p>
+                <button class="btn" onclick="showView('explore')">Start Exploring</button>
+            </div>
+        </section>
+
+        <section class="popular">
+            <h2 class="title">Popular Destinations</h2>
+            <div class="card-container" id="popularContainer">
+                <div class="home-card" onclick="goToDetails('Ooty')">
+                    <img src="https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?auto=format&fit=crop&w=800&q=80" alt="Ooty" onerror="this.onerror=null; this.src=DEFAULT_FALLBACK_IMAGE;">
+                    <div class="home-card-content">
+                        <h3>Ooty</h3>
+                        <p>Famous for tea gardens, pleasant climate and beautiful lakes.</p>
+                        <div class="price">₹8,000</div>
+                    </div>
+                </div>
+                <div class="home-card" onclick="goToDetails('Goa')">
+                    <img src="https://images.unsplash.com/photo-1540206395-68808572332f?auto=format&fit=crop&w=800&q=80" alt="Goa" onerror="this.onerror=null; this.src=DEFAULT_FALLBACK_IMAGE;">
+                    <div class="home-card-content">
+                        <h3>Goa</h3>
+                        <p>Beautiful beaches, vibrant nightlife, and Portuguese architecture.</p>
+                        <div class="price">₹12,000</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="why">
+            <h2 class="title">Why Choose Explore Seasons?</h2>
+            <div class="why-container">
+                <div class="why-card">
+                    <div class="icon">🌤️</div>
+                    <h3>Season Based Suggestions</h3>
+                    <p>Find destinations according to the best season so that you enjoy your trip at the perfect time.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon">💰</div>
+                    <h3>Budget Estimation</h3>
+                    <p>Get an approximate travel budget before planning your journey efficiently.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon">📍</div>
+                    <h3>Famous Attractions</h3>
+                    <p>We recommend only the most popular and highly visited tourist places across the region.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="season">
+            <h2 class="title">Travel By Season</h2>
+            <div class="season-container">
+                <div class="season-card" onclick="searchFromHome('Summer')">
+                    <div class="emoji">☀️</div>
+                    <h3>Summer</h3>
+                    <p>Hill Stations & Cool Places</p>
+                </div>
+                <div class="season-card" onclick="searchFromHome('Monsoon')">
+                    <div class="emoji">🌧️</div>
+                    <h3>Monsoon</h3>
+                    <p>Waterfalls & Green Nature</p>
+                </div>
+                <div class="season-card" onclick="searchFromHome('Winter')">
+                    <div class="emoji">❄️</div>
+                    <h3>Winter</h3>
+                    <p>Snow Destinations</p>
+                </div>
+                <div class="season-card" onclick="searchFromHome('Spring')">
+                    <div class="emoji">🌸</div>
+                    <h3>Spring</h3>
+                    <p>Gardens & Valleys</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-box">
+                <h2>50+</h2>
+                <p>Tourist Places</p>
+            </div>
+            <div class="stat-box">
+                <h2>28</h2>
+                <p>Indian States</p>
+            </div>
+            <div class="stat-box">
+                <h2>5</h2>
+                <p>Travel Seasons</p>
+            </div>
+            <div class="stat-box">
+                <h2>100%</h2>
+                <p>Free Guide</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================================
+        2. EXPLORE / DISCOVER PLACES VIEW
+    ========================================================= -->
+    <div id="exploreView" class="spa-view">
+        <section class="page-title">
+            <h1>Explore Famous Destinations</h1>
+            <p>Find famous places based on season, state, and estimated budget.</p>
+        </section>
+
+        <section class="filters">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search destination (e.g., Hyderabad, Manali, Goa) or type a season to view options...">
+                <div id="recommendationOutput" class="recommendation-box"></div>
+            </div>
+
+            <p class="filter-title">Recommended Season Highlights</p>
+            <div class="season-buttons" id="seasonVisualTrackers">
+                <button class="season-btn active" data-season="All" onclick="setSeasonOverride('All')">All</button>
+                <button class="season-btn" data-season="Summer" onclick="setSeasonOverride('Summer')">☀️ Summer</button>
+                <button class="season-btn" data-season="Monsoon" onclick="setSeasonOverride('Monsoon')">🌧️ Monsoon</button>
+                <button class="season-btn" data-season="Winter" onclick="setSeasonOverride('Winter')">❄️ Winter</button>
+                <button class="season-btn" data-season="Spring" onclick="setSeasonOverride('Spring')">🌸 Spring</button>
+            </div>
+
+            <div class="state-filter">
+                <p class="filter-title">Select State</p>
+                <select id="stateFilter">
+                    <option value="All">All States</option>
+                </select>
+            </div>
+
+            <div class="budget-filter">
+                <p class="filter-title">Maximum Budget Limit</p>
+                <input type="range" id="budgetRange" step="500">
+                <p id="budgetValue">Loading system parameters...</p>
+            </div>
+
+            <p id="resultCount">Loading database destinations...</p>
+        </section>
+
+        <section class="destinations" id="destinationContainer"></section>
+    </div>
+
+    <!-- ========================================================
+        3. DYNAMIC DETAILS VIEW
+    ========================================================= -->
+    <div id="detailsView" class="spa-view">
+        <div class="back-container">
+            <a class="back-link" onclick="showView('explore')">← Back to Explore</a>
+        </div>
+
+        <section class="details">
+            <img id="placeImage" class="hero-image" src="" alt="Destination">
+            <div class="content">
+                <h1 id="placeName" class="place-name">Loading...</h1>
+                <p id="placeState" class="state">Please wait...</p>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>🌤️ Recommended Season</h3>
+                        <p id="placeSeason"></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>💰 Estimated Budget</h3>
+                        <p id="placeBudget"></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>⭐ Main Attraction</h3>
+                        <p id="placeAttraction"></p>
+                    </div>
+                </div>
+
+                <div class="description">
+                    <h2>Description</h2>
+                    <p id="placeDescription"></p>
+                </div>
+
+                <div class="list-section">
+                    <h2>Top Attractions</h2>
+                    <ul id="topAttractions"></ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================================
+        4. GALLERY VIEW
+    ========================================================= -->
+    <div id="galleryView" class="spa-view">
+        <section class="hero-banner">
+            <h1>Destination Gallery</h1>
+            <p>Explore the beauty of India's most famous tourist destinations.</p>
+        </section>
+        
+        <section class="gallery-grid" id="galleryContainer"></section>
+    </div>
+
+    <!-- ========================================================
+        5. FUTURE UPDATES & DATABASE PANEL VIEW
+    ========================================================= -->
+    <div id="updatesView" class="spa-view">
+        <section class="hero-banner">
+            <h1>Database Administration Panel</h1>
+            <p>Directly add new records inside the local SQLite architecture storage stack.</p>
+        </section>
+
+        <div class="contact-container" style="grid-template-columns: 1fr; max-width: 800px; margin-top: 40px; margin-bottom: 20px;">
+            <div class="contact-form">
+                <h2>Add Destination to Live Storage Model</h2>
+                <form id="dbConsoleForm">
+                    <input type="text" id="formName" name="name" placeholder="Destination Name (e.g., Manali)" required>
+                    <input type="text" id="formState" name="state" placeholder="State Name (e.g., Himachal Pradesh)" required>
+                    
+                    <select id="formSeason" name="season" required>
+                        <option value="" disabled selected>Select Best Season</option>
+                        <option value="Summer">Summer</option>
+                        <option value="Monsoon">Monsoon</option>
+                        <option value="Winter">Winter</option>
+                        <option value="Spring">Spring</option>
+                    </select>
+
+                    <input type="number" id="formBudget" name="budget" placeholder="Estimated Structural Budget Cost (₹)" min="1000" required>
+                    <input type="url" id="formImageUrl" name="image_url" placeholder="Secure Resource Image link URL Path">
+                    <textarea id="formDesc" name="description" placeholder="Provide complete summary attributes and highlight top local historical attractions..." required></textarea>
+                    
+                    <button type="submit">Commit to Database</button>
+                    <div id="formStatusMessage"></div>
+                </form>
+            </div>
+        </div>
+
+        <section class="updates-grid">
+            <div class="update-card">
+                <h3>🌍 New Destinations</h3>
+                <p>More beautiful destinations from different regions will be added soon with detailed information, travel tips, and attractions.</p>
+                <div class="date">System Active</div>
+            </div>
+            <div class="update-card">
+                <h3>⭐ User Reviews</h3>
+                <p>Visitors will soon be able to share their travel experiences, ratings, and suggestions for different destinations.</p>
+                <div class="date">Coming Soon</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================================
+        6. CONTACT VIEW
+    ========================================================= -->
+    <div id="contactView" class="spa-view">
+        <section class="hero-banner">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear your suggestions and feedback.</p>
+        </section>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Get In Touch</h2>
+                <p>📍 <strong>Location:</strong> Hyderabad, Telangana, India</p>
+                <p>📧 <strong>Email:</strong> tourismguide@gmail.com</p>
+                <p>📞 <strong>Phone:</strong> +91 73967 60558</p>
+                <p>🕒 <strong>Working Hours:</strong><br>Monday - Saturday<br>9:00 AM - 6:00 PM</p>
+                <p>Feel free to contact us for suggestions, queries or future collaborations.</p>
+            </div>
+
+            <div class="contact-form">
+                <h2>Send a Message</h2>
+                <form id="contactForm">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="text" placeholder="Subject" required>
+                    <textarea placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>©️ 2026 Tourism Guide | Educational Project | Explore • Discover • Experience</p>
+    </footer>
+
+    <!-- ========================================================
+        APPLICATION DATA & CONTROLLER LOGIC
+    ========================================================= -->
+    <script>
+        let destinationData = {};
+
+        // DOM Element Selectors
+        const container = document.getElementById("destinationContainer");
+        const galleryContainer = document.getElementById("galleryContainer");
+        const popularContainer = document.getElementById("popularContainer");
+        const searchInput = document.getElementById("searchInput");
+        const recommendationOutput = document.getElementById("recommendationOutput");
+        const stateFilter = document.getElementById("stateFilter");
+        const budgetRange = document.getElementById("budgetRange");
+        const budgetValue = document.getElementById("budgetValue");
+        const resultCount = document.getElementById("resultCount");
+        const dbConsoleForm = document.getElementById("dbConsoleForm");
+        const formStatusMessage = document.getElementById("formStatusMessage");
+        const seasonButtons = document.querySelectorAll(".season-btn");
+
+        let selectedSeasonFilter = "All";
+
+        // Global High-Availability Image Fallback Resource
+        const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?auto=format&fit=crop&w=800&q=80";
+
+        // SPA View Manager Switch Logic
+        function showView(viewId) {
+            document.querySelectorAll('.spa-view').forEach(view => {
+                view.classList.remove('active-view');
+            });
+            const targetedView = document.getElementById(viewId + 'View');
+            if(targetedView) targetedView.classList.add('active-view');
+            window.scrollTo(0, 0);
+        }
+
+        // Home dashboard clicking option loads items via search integration
+        function searchFromHome(seasonName) {
+            showView('explore');
+            searchInput.value = seasonName;
+            filterPlaces();
+        }
+
+        // Manual visual toggle row function
+        function setSeasonOverride(seasonName) {
+            selectedSeasonFilter = seasonName;
+            seasonButtons.forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.dataset.season === seasonName) btn.classList.add("active");
+            });
+            filterPlaces();
+        }
+
+        // Async Loader fetching models from Python Flask server API Endpoint
+        async function loadDestinationsFromDB() {
+            try {
+                const response = await fetch('/api/destinations');
+                const rawData = await response.json();
+                
+                destinationData = {};
+                let prices = [];
+                let statesSet = new Set();
+
+                rawData.forEach(item => {
+                    destinationData[item.name] = {
+                        image: item.image_url || DEFAULT_FALLBACK_IMAGE,
+                        state: item.state,
+                        season: item.season,
+                        budget: item.budget,
+                        budgetText: `₹${item.budget.toLocaleString('en-IN')}`,
+                        attraction: item.description ? item.description.split('.')[0] : "Local Sites",
+                        description: item.description || "No description provided."
+                    };
+                    prices.push(item.budget);
+                    if (item.state) statesSet.add(item.state.trim());
+                });
+
+                // RECTIFIED: Update State Select Filter Dropdown options dynamically based on live database values
+                const currentSelectedState = stateFilter.value;
+                stateFilter.innerHTML = `<option value="All">All States</option>`;
+                
+                Array.from(statesSet).sort().forEach(stateName => {
+                    const option = document.createElement("option");
+                    option.value = stateName;
+                    option.textContent = stateName;
+                    stateFilter.appendChild(option);
+                });
+                
+                if (statesSet.has(currentSelectedState)) {
+                    stateFilter.value = currentSelectedState;
+                }
+
+                if (prices.length > 0) {
+                    const minPrice = Math.min(...prices);
+                    const maxPrice = Math.max(...prices);
+                    
+                    budgetRange.min = minPrice;
+                    budgetRange.max = maxPrice;
+                    
+                    if (!budgetRange.dataset.userHasTouched) {
+                        budgetRange.value = maxPrice;
+                        budgetValue.innerText = `₹${maxPrice.toLocaleString('en-IN')}`;
+                    }
+                }
+
+                filterPlaces();
+                buildGallery();
+                buildPopularBanner();
+            } catch (err) {
+                console.error("Database connection dropped down:", err);
+                resultCount.innerText = "Error loading structural database variables.";
+            }
+        }
+
+        // Render Cards inside the Explore Grid Layout
+        function displayPlaces(dataList) {
+            container.innerHTML = "";
+            resultCount.innerText = `Showing ${dataList.length} Destinations`;
+
+            if(dataList.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">No matching destinations found in storage.</p>`;
+                return;
+            }
+
+            dataList.forEach(item => {
+                let cardClass = "explore-card";
+                let badgeMarkup = "";
+                let buttonMarkup = `<button onclick="goToDetails('${item.name}')">View Details</button>`;
+
+                if (item.isOverBudget) {
+                    cardClass += " card-overbudget";
+                    badgeMarkup = `<div class="budget-warning-badge">+₹${item.deficit.toLocaleString('en-IN')} Short</div>`;
+                    buttonMarkup = `<button style="background: #777; cursor: not-allowed;" disabled>🔒 Above Current Slider Budget</button>`;
+                }
+
+                container.innerHTML += `
+                    <div class="${cardClass}">
+                        ${badgeMarkup}
+                        <!-- RECTIFIED: Added online runtime link protection circuit loop -->
+                        <img src="${item.data.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
+                        <div class="explore-card-content">
+                            <h3>${item.name}</h3>
+                            <p><strong>📍 State:</strong> ${item.data.state}</p>
+                            <p><strong>🌤️ Recommended Season:</strong> <span style="color: #0F4C81; font-weight: 600;">${item.data.season}</span></p>
+                            <p><strong>💰 Required Base Budget:</strong> ${item.data.budgetText}</p>
+                            ${buttonMarkup}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Dynamic Advisor Recommendation Logic
+        function handleRecommendations(searchVal, maxBudget) {
+            seasonButtons.forEach(btn => btn.classList.remove("active"));
+            
+            if (!searchVal) {
+                const matchAllBtn = document.querySelector('[data-season="All"]');
+                if (matchAllBtn && selectedSeasonFilter === "All") matchAllBtn.classList.add("active");
+                recommendationOutput.innerHTML = "";
+                recommendationOutput.style.padding = "0";
+                return;
+            }
+
+            const exactKey = Object.keys(destinationData).find(
+                key => key.toLowerCase() === searchVal.toLowerCase()
+            );
+
+            if (!exactKey) {
+                const matchesSeasonKeyword = ["summer", "monsoon", "winter", "spring"].includes(searchVal.toLowerCase());
+                if(matchesSeasonKeyword) {
+                    const matchedSeason = searchVal.charAt(0).toUpperCase() + searchVal.slice(1).toLowerCase();
+                    const trackerBtn = document.querySelector(`[data-season="${matchedSeason}"]`);
+                    if(trackerBtn) trackerBtn.classList.add("active");
+                    
+                    recommendationOutput.style.padding = "12px";
+                    recommendationOutput.innerHTML = `
+                        <div style="color: #0F4C81; font-size: 14px;">
+                            🌤️ Displaying all destinations whose ideal recommended season is <strong>${matchedSeason}</strong>!
+                        </div>
+                    `;
+                    return;
+                }
+
+                const fallbackBtn = document.querySelector(`[data-season="${selectedSeasonFilter}"]`);
+                if(fallbackBtn) fallbackBtn.classList.add("active");
+
+                recommendationOutput.style.padding = "12px";
+                recommendationOutput.innerHTML = `
+                    <div style="color: #666; font-size: 14px;">
+                        🔍 Searching data models... Try typing **Hyderabad**, **Manali**, or **Winter**!
+                    </div>
+                `;
+                return;
+            }
+
+            const targetPlace = destinationData[exactKey];
+            recommendationOutput.style.padding = "16px";
+
+            const targetSeasonBtn = document.querySelector(`[data-season="${targetPlace.season}"]`);
+            if(targetSeasonBtn) targetSeasonBtn.classList.add("active");
+
+            if (maxBudget >= targetPlace.budget) {
+                recommendationOutput.innerHTML = `
+                    <div style="background-color: #e6f4ea; border-left: 5px solid #34a853; padding: 12px; border-radius: 6px; font-size: 14px; color: #137333;">
+                        🎉 <strong>Perfect Match!</strong> The budget you set (<strong>₹${maxBudget.toLocaleString('en-IN')}</strong>) covers the base cost for <strong>${exactKey}</strong>.<br>
+                        🌤️ <strong>Season Recommendation:</strong> We highly recommend visiting during the <strong style="text-decoration: underline;">${targetPlace.season}</strong> season to experience the best conditions!
+                    </div>
+                `;
+            } else {
+                recommendationOutput.innerHTML = `
+                    <div style="background-color: #fce8e6; border-left: 5px solid #ea4335; padding: 12px; border-radius: 6px; font-size: 14px; color: #c5221f;">
+                        ⚠️ <strong>Budget Cap Restriction:</strong> The budget you set (<strong>₹${maxBudget.toLocaleString('en-IN')}</strong>) falls short of the required <strong>₹${targetPlace.budget.toLocaleString('en-IN')}</strong> entry baseline.<br>
+                        📉 <strong>Recommendation:</strong> Add an extra <strong>₹${(targetPlace.budget - maxBudget).toLocaleString('en-IN')}</strong> to unlock this destination.<br>
+                        🌤️ <strong>Ideal Season:</strong> When ready, plan your trip for the stunning <strong>${targetPlace.season}</strong> views!
+                    </div>
+                `;
+            }
+        }
+
+        // Filter Execution Loop Logic
+        function filterPlaces() {
+            const search = searchInput.value.toLowerCase().trim();
+            const state = stateFilter.value;
+            const maxBudget = parseInt(budgetRange.value) || 25000;
+
+            handleRecommendations(searchInput.value.trim(), maxBudget);
+
+            const filtered = Object.keys(destinationData).map(key => {
+                const dataObj = destinationData[key];
+                const isOver = dataObj.budget > maxBudget;
+                return {
+                    name: key,
+                    data: dataObj,
+                    isOverBudget: isOver,
+                    deficit: isOver ? (dataObj.budget - maxBudget) : 0
+                };
+            }).filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(search) || item.data.season.toLowerCase().includes(search);
+                const matchState = state === "All" || item.data.state === state;
+                
+                let matchSeasonRow = true;
+                if (selectedSeasonFilter !== "All" && !search) {
+                    matchSeasonRow = item.data.season === selectedSeasonFilter;
+                }
+
+                return matchSearch && matchState && matchSeasonRow;
+            });
+
+            displayPlaces(filtered);
+        }
+
+        function goToDetails(placeName) {
+            const place = destinationData[placeName];
+            if (!place) return;
+
+            const detailImg = document.getElementById("placeImage");
+            detailImg.src = place.image;
+            detailImg.alt = placeName;
+            detailImg.onerror = function() { this.src = DEFAULT_FALLBACK_IMAGE; };
+
+            document.getElementById("placeName").innerHTML = placeName;
+            document.getElementById("placeState").innerHTML = `📍 State: ${place.state}`;
+            document.getElementById("placeSeason").innerHTML = place.season;
+            document.getElementById("placeBudget").innerHTML = place.budgetText;
+            document.getElementById("placeAttraction").innerHTML = place.attraction;
+            document.getElementById("placeDescription").innerHTML = place.description;
+
+            const topList = document.getElementById("topAttractions");
+            topList.innerHTML = "";
+            const features = place.description.split(',');
+            features.forEach(feat => {
+                if(feat.trim().length > 2){
+                    const li = document.createElement("li");
+                    li.innerHTML = feat.trim();
+                    topList.appendChild(li);
+                }
+            });
+
+            showView('details');
+        }
+
+        function buildGallery() {
+            galleryContainer.innerHTML = "";
+            const keys = Object.keys(destinationData);
+            if(keys.length === 0) return;
+            
+            keys.forEach(key => {
+                const place = destinationData[key];
+                galleryContainer.innerHTML += `
+                    <div class="image-card" onclick="goToDetails('${key}')">
+                        <!-- RECTIFIED: Added secure fallback image loop -->
+                        <img src="${place.image}" alt="${key}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
+                        <div class="image-info">
+                            <h3>${key}</h3>
+                            <p>${place.state}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function buildPopularBanner() {
+            const keys = Object.keys(destinationData);
+            if(keys.length === 0) return;
+            popularContainer.innerHTML = "";
+            
+            keys.slice(0, 3).forEach(key => {
+                const place = destinationData[key];
+                popularContainer.innerHTML += `
+                    <div class="home-card" onclick="goToDetails('${key}')">
+                        <!-- RECTIFIED: Added secure fallback image loop -->
+                        <img src="${place.image}" alt="${key}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
+                        <div class="home-card-content">
+                            <h3>${key}</h3>
+                            <p>${place.attraction}</p>
+                            <div class="price">${place.budgetText}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        dbConsoleForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const formData = new URLSearchParams();
+            formData.append('name', document.getElementById('formName').value.trim());
+            formData.append('state', document.getElementById('formState').value.trim());
+            formData.append('season', document.getElementById('formSeason').value);
+            formData.append('budget', document.getElementById('formBudget').value);
+            formData.append('image_url', document.getElementById('formImageUrl').value.trim());
+            formData.append('description', document.getElementById('formDesc').value.trim());
+
+            try {
+                formStatusMessage.style.display = "block";
+                formStatusMessage.style.backgroundColor = "#fff3cd";
+                formStatusMessage.style.color = "#856404";
+                formStatusMessage.innerText = "Committing to local SQLite storage engine...";
+
+                const response = await fetch('/add-destination', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+
+                if (response.ok) {
+                    formStatusMessage.style.backgroundColor = "#d4edda";
+                    formStatusMessage.style.color = "#155724";
+                    formStatusMessage.innerText = "🎉 Record committed successfully to SQLite store!";
+                    
+                    dbConsoleForm.reset();
+                    await loadDestinationsFromDB();
+                    setTimeout(() => { formStatusMessage.style.display = "none"; }, 4000);
+                } else {
+                    throw new Error("Server rejected record payload mapping specifications.");
+                }
+            } catch (err) {
+                console.error("Storage error:", err);
+                formStatusMessage.style.backgroundColor = "#f8d7da";
+                formStatusMessage.style.color = "#721c24";
+                formStatusMessage.innerText = "❌ Connection error: Could not save attributes.";
+            }
+        });
+
+        // Event Registration Hooks
+        searchInput.addEventListener("input", filterPlaces);
+        stateFilter.addEventListener("change", filterPlaces);
+        
+        budgetRange.addEventListener("input", () => {
+            budgetRange.dataset.userHasTouched = "true";
+            budgetValue.innerText = `₹${parseInt(budgetRange.value).toLocaleString('en-IN')}`;
+            filterPlaces();
+        });
+
+        document.getElementById("contactForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Thank you! Feedback received successfully.");
+            this.reset();
+        });
+
+        window.addEventListener('DOMContentLoaded', loadDestinationsFromDB);
+    </script>
+</body>
+
+</html>
