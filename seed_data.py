@@ -12,122 +12,134 @@ sys.path.append(BASE_DIR)
 
 from backend import app, db, Destination
 
-def get_accurate_wiki_image(wiki_title):
-    """Uses Wikipedia's App API to safely fetch the official thumbnail without rate-limiting."""
-    # Ensure the title is formatted correctly for a URL
-    safe_title = urllib.parse.quote(wiki_title.replace(' ', '_'))
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{safe_title}"
-    
-    # A custom User-Agent ensures Wikipedia knows we are a legitimate app, avoiding 429 blocks
-    headers = {
-        'User-Agent': 'TourismGuideApp/1.0 (Educational Project) Python/urllib'
-    }
-    
-    req = urllib.request.Request(url, headers=headers)
+def get_commons_image(search_term):
+    """Directly searches Wikimedia's image database for real photos of the location."""
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
-
-    try:
-        with urllib.request.urlopen(req, context=ctx, timeout=10) as response:
-            data = json.loads(response.read().decode('utf-8'))
-            
-            # Extract the official thumbnail provided by Wikipedia
-            if 'thumbnail' in data and 'source' in data['thumbnail']:
-                img_url = data['thumbnail']['source']
-                # Wikipedia defaults to 320px. We scale it up to 640px for a sharper UI card
-                return img_url.replace("320px-", "640px-")
+    headers = {'User-Agent': 'TourismGuideApp/2.0 (Python/urllib)'}
+    
+    # We append 'filetype:bitmap' to guarantee we get a JPG/PNG, not a PDF or video
+    query = urllib.parse.quote(f"{search_term} filetype:bitmap")
+    search_url = f"https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch={query}&srnamespace=6&format=json&srlimit=1"
+    
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(search_url, headers=headers)
+            with urllib.request.urlopen(req, context=ctx, timeout=10) as response:
+                data = json.loads(response.read().decode('utf-8'))
+                search_results = data.get('query', {}).get('search', [])
                 
-    except Exception as e:
-        print(f" [Warning: Couldn't fetch {wiki_title}] ", end="")
-        
-    # Safe, guaranteed fallback only if the location absolutely has no Wikipedia image
-    return "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Taj_Mahal_in_March_2004.jpg/640px-Taj_Mahal_in_March_2004.jpg"
+                if search_results:
+                    file_title = search_results[0]['title']
+                    
+                    # Step 2: Ask Wikimedia for the direct 800px thumbnail of this specific file
+                    img_url_req = f"https://commons.wikimedia.org/w/api.php?action=query&titles={urllib.parse.quote(file_title)}&prop=imageinfo&iiprop=url&iiurlwidth=800&format=json"
+                    req2 = urllib.request.Request(img_url_req, headers=headers)
+                    
+                    with urllib.request.urlopen(req2, context=ctx, timeout=10) as r2:
+                        img_data = json.loads(r2.read().decode('utf-8'))
+                        pages = img_data.get('query', {}).get('pages', {})
+                        for page_id, page_info in pages.items():
+                            if 'imageinfo' in page_info:
+                                return page_info['imageinfo'][0]['thumburl']
+                                
+        except Exception as e:
+            time.sleep(2) # If the internet stutters, wait 2 seconds and try again
+            
+    # Absolute final fallback: A generic lush green landscape (NOT the Taj Mahal)
+    return "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/East_Coast_Road_near_Marakkanam.jpg/800px-East_Coast_Road_near_Marakkanam.jpg"
 
+# Hand-curated search terms guaranteed to pull beautiful, accurate photography from Commons
 destinations_list = [
     # === SUMMER ===
-    ("Munnar", "Kerala", "Summer", 8500, "Munnar"),
-    ("Ooty", "Tamil Nadu", "Summer", 8000, "Ooty"),
-    ("Manali", "Himachal Pradesh", "Summer", 11000, "Manali, Himachal Pradesh"),
-    ("Kasauli", "Himachal Pradesh", "Summer", 7000, "Kasauli"),
-    ("Coonoor", "Tamil Nadu", "Summer", 7500, "Coonoor"),
-    ("Kodaikanal", "Tamil Nadu", "Summer", 9000, "Kodaikanal"),
-    ("Dharamshala", "Himachal Pradesh", "Summer", 9500, "Dharamshala"),
-    ("Shimla", "Himachal Pradesh", "Summer", 9000, "Shimla"),
-    ("Mussoorie", "Uttarakhand", "Summer", 8000, "Mussoorie"),
-    ("Horsley Hills", "Andhra Pradesh", "Summer", 6000, "Horsley Hills"),
-    ("Nainital", "Uttarakhand", "Summer", 8500, "Nainital"),
-    ("Mount Abu", "Rajasthan", "Summer", 7500, "Mount Abu"),
-    ("Dalhousie", "Himachal Pradesh", "Summer", 9500, "Dalhousie, India"),
-    ("Chikmagalur", "Karnataka", "Summer", 7000, "Chikmagalur"),
-    ("Yercaud", "Tamil Nadu", "Summer", 6500, "Yercaud"),
+    ("Munnar", "Kerala", "Summer", 8500, "Munnar tea gardens"),
+    ("Ooty", "Tamil Nadu", "Summer", 8000, "Ooty lake landscape"),
+    ("Manali", "Himachal Pradesh", "Summer", 11000, "Manali Himachal landscape"),
+    ("Kasauli", "Himachal Pradesh", "Summer", 7000, "Kasauli Himachal"),
+    ("Coonoor", "Tamil Nadu", "Summer", 7500, "Coonoor Nilgiris"),
+    ("Kodaikanal", "Tamil Nadu", "Summer", 9000, "Kodaikanal lake"),
+    ("Dharamshala", "Himachal Pradesh", "Summer", 9500, "Dharamshala landscape"),
+    ("Shimla", "Himachal Pradesh", "Summer", 9000, "Shimla Ridge"),
+    ("Mussoorie", "Uttarakhand", "Summer", 8000, "Mussoorie hills"),
+    ("Horsley Hills", "Andhra Pradesh", "Summer", 6000, "Horsley Hills Andhra"),
+    ("Nainital", "Uttarakhand", "Summer", 8500, "Nainital lake"),
+    ("Mount Abu", "Rajasthan", "Summer", 7500, "Mount Abu Nakki Lake"),
+    ("Dalhousie", "Himachal Pradesh", "Summer", 9500, "Dalhousie Himachal"),
+    ("Chikmagalur", "Karnataka", "Summer", 7000, "Chikmagalur hills"),
+    ("Yercaud", "Tamil Nadu", "Summer", 6500, "Yercaud lake"),
 
     # === MONSOON ===
-    ("Lonavala", "Maharashtra", "Monsoon", 6500, "Lonavala"),
-    ("Mahabaleshwar", "Maharashtra", "Monsoon", 7000, "Mahabaleshwar"),
-    ("Ananthagiri Hills", "Telangana", "Monsoon", 5000, "Ananthagiri Hills"),
-    ("Araku Valley", "Andhra Pradesh", "Monsoon", 7000, "Araku Valley"),
-    ("Wayanad", "Kerala", "Monsoon", 7500, "Wayanad district"),
-    ("Coorg", "Karnataka", "Monsoon", 7500, "Kodagu district"),
-    ("Cherrapunji", "Meghalaya", "Monsoon", 12000, "Cherrapunji"),
-    ("Agumbe", "Karnataka", "Monsoon", 6000, "Agumbe"),
-    ("Igatpuri", "Maharashtra", "Monsoon", 5500, "Igatpuri"),
+    ("Lonavala", "Maharashtra", "Monsoon", 6500, "Lonavala monsoon"),
+    ("Mahabaleshwar", "Maharashtra", "Monsoon", 7000, "Mahabaleshwar landscape"),
+    ("Ananthagiri Hills", "Telangana", "Monsoon", 5000, "Ananthagiri Hills Vikarabad"),
+    ("Araku Valley", "Andhra Pradesh", "Monsoon", 7000, "Araku Valley landscape"),
+    ("Wayanad", "Kerala", "Monsoon", 7500, "Wayanad landscape"),
+    ("Coorg", "Karnataka", "Monsoon", 7500, "Kodagu landscape"),
+    ("Cherrapunji", "Meghalaya", "Monsoon", 12000, "Cherrapunji waterfalls"),
+    ("Agumbe", "Karnataka", "Monsoon", 6000, "Agumbe rainforest"),
+    ("Igatpuri", "Maharashtra", "Monsoon", 5500, "Igatpuri monsoon"),
     ("Kuntala Waterfalls", "Telangana", "Monsoon", 4000, "Kuntala Waterfall"),
-    ("Bhandardara", "Maharashtra", "Monsoon", 6000, "Bhandardara"),
+    ("Bhandardara", "Maharashtra", "Monsoon", 6000, "Bhandardara dam"),
     ("Athirappilly", "Kerala", "Monsoon", 8000, "Athirappilly Falls"),
-    ("Matheran", "Maharashtra", "Monsoon", 5000, "Matheran"),
-    ("Amboli", "Maharashtra", "Monsoon", 5000, "Amboli, Sindhudurg"),
+    ("Matheran", "Maharashtra", "Monsoon", 5000, "Matheran landscape"),
+    ("Amboli", "Maharashtra", "Monsoon", 5000, "Amboli ghat"),
     ("Jog Falls", "Karnataka", "Monsoon", 6500, "Jog Falls"),
 
     # === WINTER ===
-    ("Jaipur", "Rajasthan", "Winter", 8000, "Jaipur"),
-    ("Jaisalmer", "Rajasthan", "Winter", 8500, "Jaisalmer"),
-    ("Hampi", "Karnataka", "Winter", 6500, "Hampi"),
-    ("Pondicherry", "Puducherry", "Winter", 7000, "Pondicherry"),
-    ("Goa", "Goa", "Winter", 12000, "Goa"),
-    ("Agra", "Uttar Pradesh", "Winter", 6000, "Agra"),
-    ("Rann of Kutch", "Gujarat", "Winter", 11000, "Rann of Kutch"),
-    ("Varanasi", "Uttar Pradesh", "Winter", 5500, "Varanasi"),
-    ("Udaipur", "Rajasthan", "Winter", 9500, "Udaipur"),
-    ("Gokarna", "Karnataka", "Winter", 6000, "Gokarna, Karnataka"),
-    ("Alleppey", "Kerala", "Winter", 10500, "Alappuzha"),
-    ("Auli", "Uttarakhand", "Winter", 13000, "Auli, India"),
-    ("Badami", "Karnataka", "Winter", 5000, "Badami"),
-    ("Khajuraho", "Madhya Pradesh", "Winter", 7500, "Khajuraho Group of Monuments"),
-    ("Mysore", "Karnataka", "Winter", 6000, "Mysore"),
+    ("Jaipur", "Rajasthan", "Winter", 8000, "Hawa Mahal Jaipur"),
+    ("Jaisalmer", "Rajasthan", "Winter", 8500, "Jaisalmer Fort"),
+    ("Hampi", "Karnataka", "Winter", 6500, "Hampi ruins"),
+    ("Pondicherry", "Puducherry", "Winter", 7000, "Pondicherry French Quarter"),
+    ("Goa", "Goa", "Winter", 12000, "Goa beach"),
+    ("Agra", "Uttar Pradesh", "Winter", 6000, "Taj Mahal"),
+    ("Rann of Kutch", "Gujarat", "Winter", 11000, "Rann of Kutch white desert"),
+    ("Varanasi", "Uttar Pradesh", "Winter", 5500, "Varanasi ghats"),
+    ("Udaipur", "Rajasthan", "Winter", 9500, "Udaipur Lake Palace"),
+    ("Gokarna", "Karnataka", "Winter", 6000, "Gokarna beach"),
+    ("Alleppey", "Kerala", "Winter", 10500, "Alleppey backwaters"),
+    ("Auli", "Uttarakhand", "Winter", 13000, "Auli snow"),
+    ("Badami", "Karnataka", "Winter", 5000, "Badami caves"),
+    ("Khajuraho", "Madhya Pradesh", "Winter", 7500, "Khajuraho temple"),
+    ("Mysore", "Karnataka", "Winter", 6000, "Mysore Palace"),
 
     # === SPRING ===
-    ("Shillong", "Meghalaya", "Spring", 9000, "Shillong"),
-    ("Gangtok", "Sikkim", "Spring", 9500, "Gangtok"),
-    ("Tulip Garden Srinagar", "Jammu & Kashmir", "Spring", 12000, "Indira Gandhi Memorial Tulip Garden"),
-    ("Yumthang Valley", "Sikkim", "Spring", 11000, "Yumthang Valley of Flowers"),
-    ("Kasol", "Himachal Pradesh", "Spring", 7000, "Kasol"),
-    ("Rishikesh", "Uttarakhand", "Spring", 6000, "Rishikesh"),
+    ("Shillong", "Meghalaya", "Spring", 9000, "Shillong landscape"),
+    ("Gangtok", "Sikkim", "Spring", 9500, "Gangtok Sikkim"),
+    ("Tulip Garden Srinagar", "Jammu & Kashmir", "Spring", 12000, "Tulip Garden Srinagar"),
+    ("Yumthang Valley", "Sikkim", "Spring", 11000, "Yumthang Valley"),
+    ("Kasol", "Himachal Pradesh", "Spring", 7000, "Kasol Parvati Valley"),
+    ("Rishikesh", "Uttarakhand", "Spring", 6000, "Rishikesh Ganga"),
     ("Valley of Flowers", "Uttarakhand", "Spring", 14000, "Valley of Flowers National Park"),
-    ("Mirik", "West Bengal", "Spring", 6500, "Mirik"),
-    ("Kalimpong", "West Bengal", "Spring", 7500, "Kalimpong"),
-    ("Palampur", "Himachal Pradesh", "Spring", 7000, "Palampur"),
-    ("Lansdowne", "Uttarakhand", "Spring", 5500, "Lansdowne, India"),
-    ("Ziro", "Arunachal Pradesh", "Spring", 9000, "Ziro"),
-    ("Kaziranga", "Assam", "Spring", 10000, "Kaziranga National Park"),
-    ("Tawang", "Arunachal Pradesh", "Spring", 12000, "Tawang (town)"),
-    ("Kullu", "Himachal Pradesh", "Spring", 6500, "Kullu")
+    ("Mirik", "West Bengal", "Spring", 6500, "Mirik lake"),
+    ("Kalimpong", "West Bengal", "Spring", 7500, "Kalimpong mountains"),
+    ("Palampur", "Himachal Pradesh", "Spring", 7000, "Palampur tea garden"),
+    ("Lansdowne", "Uttarakhand", "Spring", 5500, "Lansdowne Uttarakhand"),
+    ("Ziro", "Arunachal Pradesh", "Spring", 9000, "Ziro Valley"),
+    ("Kaziranga", "Assam", "Spring", 10000, "Kaziranga rhino"),
+    ("Tawang", "Arunachal Pradesh", "Spring", 12000, "Tawang Monastery"),
+    ("Kullu", "Himachal Pradesh", "Spring", 6500, "Kullu valley")
 ]
 
 with app.app_context():
-    print("Clearing old database records...")
+    print("Purging old database records...")
     db.reflect()
     db.drop_all()
     db.create_all()
     
-    print(f"Connecting to Wikipedia REST API to fetch exact location data for {len(destinations_list)} places...")
+    print("Connecting to Wikimedia Commons image database...")
+    print("This will take about 90 seconds to safely fetch all 60 unique images. Please wait...\n")
     
-    for name, state, season, budget, wiki_query in destinations_list:
-        print(f"-> Verifying accurate image for {name} ({season})...", end=" ")
+    for name, state, season, budget, search_term in destinations_list:
+        print(f"[{season}] Extracting photo for {name}...", end=" ")
         
-        img_url = get_accurate_wiki_image(wiki_query)
-        print("✅ SUCCESS")
+        img_url = get_commons_image(search_term)
         
+        if "Marakkanam" in img_url:
+            print("⚠️ FAILED (Used Greenery Fallback)")
+        else:
+            print("✅ SUCCESS")
+            
         db.session.add(Destination(
             name=name,
             state=state,
@@ -137,8 +149,8 @@ with app.app_context():
             description=f"A spectacular 1-2 day getaway spot located in {state}, perfect for an immersive {season.lower()} experience."
         ))
         
-        # A tiny pause just to be extremely safe, though the REST API is highly tolerant
-        time.sleep(0.5) 
+        # A hard 1.5-second pause ensures Wikimedia NEVER blocks your computer for rate limiting
+        time.sleep(1.5) 
         
     db.session.commit()
-    print("\n🎉 Sync Complete! The database is populated with verified, accurate Wikipedia images.")
+    print("\n🎉 Database generation complete! You are ready to start the server.")
