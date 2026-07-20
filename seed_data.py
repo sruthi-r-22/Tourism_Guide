@@ -32,6 +32,16 @@ bulk_destinations = [
         image_url="https://images.unsplash.com/photo-1574688461530-580a133e9d8c?auto=format&fit=crop&w=1200&q=80",
         description="The Golden City rises from the heart of the Thar Desert, boasting a living sandstone fort, sunset camel desert safaris, and overnight dune camp experiences."
     ),
+    Destination(
+        name="Agra", state="Uttar Pradesh", season="Winter", budget=6000,
+        image_url="https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
+        description="Home to the world-famous Taj Mahal, the magnificent Agra Fort, and historic Mughal architecture, offering a perfect heritage trip during pleasant winter months."
+    ),
+    Destination(
+        name="Varanasi", state="Uttar Pradesh", season="Winter", budget=5500,
+        image_url="https://images.unsplash.com/photo-1561361531-9952a8e3df6a?auto=format&fit=crop&w=1200&q=80",
+        description="One of the world's oldest living cities. Famous for spiritual Ganga Aarti ceremonies, vibrant river ghats, labyrinth street alleys, and grand silk weaving heritages."
+    ),
 
     # === SUMMER DESTINATIONS ===
     Destination(
@@ -54,6 +64,11 @@ bulk_destinations = [
         image_url="https://images.unsplash.com/photo-1593693411515-c202e974233c?auto=format&fit=crop&w=1200&q=80",
         description="An idyllic South Indian hill station wrapped in neatly manicured tea plantations, misty mountain peaks, Eravikulam National Park safaris, and cascading waterfalls."
     ),
+    Destination(
+        name="Darjeeling", state="West Bengal", season="Summer", budget=9500,
+        image_url="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
+        description="Framed by the majestic Kanchenjunga peaks, this scenic hill station is universally prized for premium black tea processing estates and historic UNESCO toy train tracks."
+    ),
 
     # === MONSOON DESTINATIONS ===
     Destination(
@@ -71,6 +86,11 @@ bulk_destinations = [
         image_url="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=1200&q=80",
         description="A beloved Western Ghats escape that comes alive under heavy rains with surging waterfalls, foggy mountain lookouts like Tiger's Point, and lush trekking trails."
     ),
+    Destination(
+        name="Alleppey", state="Kerala", season="Monsoon", budget=10500,
+        image_url="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1200&q=80",
+        description="Famous for majestic backwater networks, luxury overnight houseboat cruises, swaying palm-fringed channels, and picturesque traditional green paddy field vistas."
+    ),
 
     # === SPRING DESTINATIONS ===
     Destination(
@@ -87,6 +107,11 @@ bulk_destinations = [
         name="Araku Valley", state="Andhra Pradesh", season="Spring", budget=7000,
         image_url="https://images.unsplash.com/photo-1561484930-998b6a7b22e8?auto=format&fit=crop&w=1200&q=80",
         description="A scenic valley escape enriched by blooming spring coffee orchards, local tribal museum histories, Katiki waterfalls, and deep ancient Borra cave networks."
+    ),
+    Destination(
+        name="Hampi", state="Karnataka", season="Spring", budget=6500,
+        image_url="https://images.unsplash.com/photo-1600100397608-f010e423b971?auto=format&fit=crop&w=1200&q=80",
+        description="A dramatic open-air museum landscape of ancient ruins from the historic Vijayanagara Empire, showcasing giant boulder horizons, monolithic shrines, and intricately carved temples."
     )
 ]
 
