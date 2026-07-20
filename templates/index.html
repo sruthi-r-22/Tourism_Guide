@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate India Tourism Guide</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
         * {
             margin: 0;
@@ -415,26 +413,6 @@
             transform: translateY(-8px);
         }
 
-        .explore-card.card-overbudget {
-            opacity: 0.65;
-            filter: grayscale(30%);
-            border: 2px dashed #ea4335;
-        }
-
-        .budget-warning-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ea4335;
-            color: white;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 700;
-            border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            z-index: 10;
-        }
-
         .explore-card img {
             width: 100%;
             height: 220px;
@@ -713,7 +691,6 @@
         }
     </style>
 </head>
-
 <body>
 
     <header>
@@ -734,43 +711,19 @@
         <section class="home-hero">
             <div class="home-hero-content">
                 <h1>Explore India Like Never Before</h1>
-                <p>
-                    Discover India's most beautiful tourist destinations based on the best season to visit. 
-                    Find famous attractions, estimate your travel budget, and plan your perfect vacation effortlessly.
-                </p>
+                <p>Discover India's most beautiful tourist destinations based on the best season to visit.</p>
                 <button class="btn" onclick="showView('explore')">Start Exploring</button>
-            </div>
-        </section>
-
-        <section class="popular">
-            <h2 class="title">All Destinations</h2>
-            <div class="card-container" id="popularContainer"></div>
-        </section>
-
-        <section class="why">
-            <h2 class="title">Why Choose Explore Seasons?</h2>
-            <div class="why-container">
-                <div class="why-card">
-                    <div class="icon">🌤️</div>
-                    <h3>Season Based Suggestions</h3>
-                    <p>Find destinations according to the best season so that you enjoy your trip at the perfect time.</p>
-                </div>
-                <div class="why-card">
-                    <div class="icon">💰</div>
-                    <h3>Budget Estimation</h3>
-                    <p>Get an approximate travel budget before planning your journey efficiently.</p>
-                </div>
-                <div class="why-card">
-                    <div class="icon">📍</div>
-                    <h3>Famous Attractions</h3>
-                    <p>We recommend only the most popular and highly visited tourist places across the region.</p>
-                </div>
             </div>
         </section>
 
         <section class="season">
             <h2 class="title">Travel By Season</h2>
             <div class="season-container">
+                <div class="season-card" onclick="searchFromHome('All')">
+                    <div class="emoji">🌍</div>
+                    <h3>All Places</h3>
+                    <p>Show Everything</p>
+                </div>
                 <div class="season-card" onclick="searchFromHome('Summer')">
                     <div class="emoji">☀️</div>
                     <h3>Summer</h3>
@@ -784,14 +737,19 @@
                 <div class="season-card" onclick="searchFromHome('Winter')">
                     <div class="emoji">❄️</div>
                     <h3>Winter</h3>
-                    <p>Snow Destinations</p>
+                    <p>Snow & Cultural Gems</p>
                 </div>
                 <div class="season-card" onclick="searchFromHome('Spring')">
                     <div class="emoji">🌸</div>
                     <h3>Spring</h3>
-                    <p>Gardens & Valleys</p>
+                    <p>Gardens & Sprawling Valleys</p>
                 </div>
             </div>
+        </section>
+
+        <section class="popular">
+            <h2 class="title" id="homeSectionTitle">All Destinations</h2>
+            <div class="card-container" id="popularContainer"></div>
         </section>
     </div>
 
@@ -804,12 +762,11 @@
 
         <section class="filters">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search destination or type a season to view options...">
-                <div id="recommendationOutput" class="recommendation-box"></div>
+                <input type="text" id="searchInput" placeholder="Search destination name...">
             </div>
 
-            <p class="filter-title">Recommended Season Highlights</p>
-            <div class="season-buttons" id="seasonVisualTrackers">
+            <p class="filter-title">Filter by Season</p>
+            <div class="season-buttons">
                 <button class="season-btn active" data-season="All" onclick="setSeasonOverride('All')">All</button>
                 <button class="season-btn" data-season="Summer" onclick="setSeasonOverride('Summer')">☀️ Summer</button>
                 <button class="season-btn" data-season="Monsoon" onclick="setSeasonOverride('Monsoon')">🌧️ Monsoon</button>
@@ -827,7 +784,7 @@
             <div class="budget-filter">
                 <p class="filter-title">Maximum Budget Limit</p>
                 <input type="range" id="budgetRange" step="500">
-                <p id="budgetValue">Loading system parameters...</p>
+                <p id="budgetValue">Loading details...</p>
             </div>
 
             <p id="resultCount">Loading database destinations...</p>
@@ -836,10 +793,10 @@
         <section class="destinations" id="destinationContainer"></section>
     </div>
 
-    <!-- 3. DYNAMIC DETAILS VIEW -->
+    <!-- 3. DETAILS VIEW -->
     <div id="detailsView" class="spa-view">
         <div class="back-container">
-            <a class="back-link" onclick="showView('explore')">← Back to Explore</a>
+            <a class="back-link" onclick="showHomeView()">← Back to Home Dashboard</a>
         </div>
 
         <section class="details">
@@ -887,10 +844,10 @@
             <div class="contact-form">
                 <h2>Add Destination to Live Storage Model</h2>
                 <form id="dbConsoleForm">
-                    <input type="text" id="formName" name="name" placeholder="Destination Name (e.g., Manali)" required>
-                    <input type="text" id="formState" name="state" placeholder="State Name (e.g., Himachal Pradesh)" required>
+                    <input type="text" id="formName" placeholder="Destination Name" required>
+                    <input type="text" id="formState" placeholder="State Name" required>
                     
-                    <select id="formSeason" name="season" required>
+                    <select id="formSeason" required>
                         <option value="" disabled selected>Select Best Season</option>
                         <option value="Summer">Summer</option>
                         <option value="Monsoon">Monsoon</option>
@@ -898,9 +855,9 @@
                         <option value="Spring">Spring</option>
                     </select>
 
-                    <input type="number" id="formBudget" name="budget" placeholder="Estimated Budget Cost (₹)" min="1000" required>
-                    <input type="url" id="formImageUrl" name="image_url" placeholder="Secure Image Link URL">
-                    <textarea id="formDesc" name="description" placeholder="Provide complete summary specifications..." required></textarea>
+                    <input type="number" id="formBudget" placeholder="Estimated Budget Cost (₹)" min="1000" required>
+                    <input type="url" id="formImageUrl" placeholder="Secure Image Link URL">
+                    <textarea id="formDesc" placeholder="Provide summary specifications..." required></textarea>
                     
                     <button type="submit">Commit to Database</button>
                     <div id="formStatusMessage"></div>
@@ -922,7 +879,6 @@
                 <p>📍 <strong>Location:</strong> Hyderabad, Telangana, India</p>
                 <p>📧 <strong>Email:</strong> tourismguide@gmail.com</p>
                 <p>📞 <strong>Phone:</strong> +91 73967 60558</p>
-                <p>Feel free to contact us for suggestions, queries or future collaborations.</p>
             </div>
 
             <div class="contact-form">
@@ -939,228 +895,112 @@
     </div>
 
     <footer>
-        <p>©️ 2026 Tourism Guide | Educational Project</p>
+        <p>© 2026 Tourism Guide Application</p>
     </footer>
 
     <script>
-        let destinationData = {};
+        let destinationData = [];
+        let selectedSeasonFilter = "All";
+        const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=600&q=80";
 
-        const container = document.getElementById("destinationContainer");
-        const galleryContainer = document.getElementById("galleryContainer");
         const popularContainer = document.getElementById("popularContainer");
-        const searchInput = document.getElementById("searchInput");
-        const recommendationOutput = document.getElementById("recommendationOutput");
+        const destinationContainer = document.getElementById("destinationContainer");
+        const galleryContainer = document.getElementById("galleryContainer");
         const stateFilter = document.getElementById("stateFilter");
+        const searchInput = document.getElementById("searchInput");
         const budgetRange = document.getElementById("budgetRange");
         const budgetValue = document.getElementById("budgetValue");
         const resultCount = document.getElementById("resultCount");
         const dbConsoleForm = document.getElementById("dbConsoleForm");
         const formStatusMessage = document.getElementById("formStatusMessage");
-        const seasonButtons = document.querySelectorAll(".season-btn");
-
-        let selectedSeasonFilter = "All";
-        const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1475503572774-15a45e5d60b9?auto=format&fit=crop&w=800&q=80";
 
         function showView(viewId) {
-            document.querySelectorAll('.spa-view').forEach(view => {
-                view.classList.remove('active-view');
-            });
-            const targetedView = document.getElementById(viewId + 'View');
-            if(targetedView) targetedView.classList.add('active-view');
-            window.scrollTo(0, 0);
+            document.querySelectorAll('.spa-view').forEach(v => v.classList.remove('active-view'));
+            const target = document.getElementById(viewId + 'View');
+            if (target) target.classList.add('active-view');
+            window.scrollTo(0,0);
         }
 
-        // Show Home View resets all filters on the home dashboard cards
         function showHomeView() {
             showView('home');
-            const homeCards = popularContainer.querySelectorAll('.home-card');
-            homeCards.forEach(card => card.style.display = "block");
-        }
-
-        // Filters the dashboard cards instantly by season
-        function searchFromHome(seasonName) {
-            const homeCards = popularContainer.querySelectorAll('.home-card');
-            let visibleCount = 0;
-            
-            homeCards.forEach(card => {
-                if (card.dataset.season === seasonName) {
-                    card.style.display = "block";
-                    visibleCount++;
-                } else {
-                    card.style.display = "none";
-                }
-            });
-            
-            document.querySelector('.popular').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function setSeasonOverride(seasonName) {
-            selectedSeasonFilter = seasonName;
-            seasonButtons.forEach(btn => {
-                btn.classList.remove("active");
-                if (btn.dataset.season === seasonName) btn.classList.add("active");
-            });
-            filterPlaces();
+            searchFromHome('All');
         }
 
         async function loadDestinationsFromDB() {
             try {
                 const response = await fetch('/api/destinations');
-                const rawData = await response.json();
+                destinationData = await response.json();
                 
-                destinationData = {};
-                let prices = [];
-                let statesSet = new Set();
-
-                rawData.forEach(item => {
-                    destinationData[item.name] = {
-                        image: item.image_url || DEFAULT_FALLBACK_IMAGE,
-                        state: item.state,
-                        season: item.season,
-                        budget: item.budget,
-                        budgetText: `₹${item.budget.toLocaleString('en-IN')}`,
-                        description: item.description || "No description provided."
-                    };
-                    prices.push(item.budget);
-                    if (item.state) statesSet.add(item.state.trim());
-                });
-
-                const currentSelectedState = stateFilter.value;
+                // Hydrate State options dynamically
+                const statesSet = new Set(destinationData.map(d => d.state.trim()));
                 stateFilter.innerHTML = `<option value="All">All States</option>`;
-                
                 Array.from(statesSet).sort().forEach(stateName => {
-                    const option = document.createElement("option");
-                    option.value = stateName;
-                    option.textContent = stateName;
-                    stateFilter.appendChild(option);
+                    stateFilter.innerHTML += `<option value="${stateName}">${stateName}</option>`;
                 });
-                
-                if (statesSet.has(currentSelectedState)) {
-                    stateFilter.value = currentSelectedState;
-                }
 
-                if (prices.length > 0) {
-                    const minPrice = Math.min(...prices);
-                    const maxPrice = Math.max(...prices);
-                    
-                    budgetRange.min = minPrice;
-                    budgetRange.max = maxPrice;
-                    
+                // Configure Budget Slider boundaries
+                const budgets = destinationData.map(d => d.budget);
+                if (budgets.length > 0) {
+                    const minB = Math.min(...budgets);
+                    const maxB = Math.max(...budgets);
+                    budgetRange.min = minB;
+                    budgetRange.max = maxB;
                     if (!budgetRange.dataset.userHasTouched) {
-                        budgetRange.value = maxPrice;
-                        budgetValue.innerText = `₹${maxPrice.toLocaleString('en-IN')}`;
+                        budgetRange.value = maxB;
+                        budgetValue.innerText = `₹${maxB.toLocaleString('en-IN')}`;
                     }
                 }
 
-                filterPlaces();
+                buildHomeDashboard();
                 buildGallery();
-                buildPopularBanner();
+                filterPlaces();
             } catch (err) {
-                console.error("Database connection dropped down:", err);
-                resultCount.innerText = "Error loading database variables.";
+                console.error("Database initialization failed:", err);
+                resultCount.innerText = "Error syncing with live database.";
             }
         }
 
-        function displayPlaces(dataList) {
-            container.innerHTML = "";
-            resultCount.innerText = `Showing ${dataList.length} Destinations`;
-
-            if(dataList.length === 0) {
-                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">No matching destinations found.</p>`;
-                return;
-            }
-
-            dataList.forEach(item => {
-                let cardClass = "explore-card";
-                let badgeMarkup = "";
-                let buttonMarkup = `<button onclick="goToDetails('${item.name}')">View Details</button>`;
-
-                if (item.isOverBudget) {
-                    cardClass += " card-overbudget";
-                    badgeMarkup = `<div class="budget-warning-badge">+₹${item.deficit.toLocaleString('en-IN')} Short</div>`;
-                    buttonMarkup = `<button style="background: #777; cursor: not-allowed;" disabled>🔒 Above Budget</button>`;
-                }
-
-                container.innerHTML += `
-                    <div class="${cardClass}">
-                        ${badgeMarkup}
-                        <img src="${item.data.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
-                        <div class="explore-card-content">
-                            <h3>${item.name}</h3>
-                            <p><strong>📍 State:</strong> ${item.data.state}</p>
-                            <p><strong>🌤️ Season:</strong> <span style="color: #0F4C81; font-weight: 600;">${item.data.season}</span></p>
-                            <p><strong>💰 Budget:</strong> ${item.data.budgetText}</p>
-                            ${buttonMarkup}
+        function buildHomeDashboard() {
+            popularContainer.innerHTML = "";
+            destinationData.forEach(place => {
+                popularContainer.innerHTML += `
+                    <div class="home-card" onclick="viewDetails('${place.name}')" data-season="${place.season}">
+                        <img src="${place.image_url || DEFAULT_FALLBACK_IMAGE}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
+                        <div class="home-card-content">
+                            <h3>${place.name}</h3>
+                            <p><strong>📍 State:</strong> ${place.state}</p>
+                            <p style="margin-top:5px; font-size:13px; color:#666;">${place.description.substring(0,80)}...</p>
+                            <div class="price">₹${place.budget.toLocaleString('en-IN')}</div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function handleRecommendations(searchVal, maxBudget) {
-            seasonButtons.forEach(btn => btn.classList.remove("active"));
+        function searchFromHome(seasonName) {
+            const cards = popularContainer.querySelectorAll('.home-card');
+            const titleElement = document.getElementById("homeSectionTitle");
             
-            if (!searchVal) {
-                const matchAllBtn = document.querySelector('[data-season="All"]');
-                if (matchAllBtn && selectedSeasonFilter === "All") matchAllBtn.classList.add("active");
-                recommendationOutput.innerHTML = "";
-                recommendationOutput.style.padding = "0";
-                return;
-            }
+            titleElement.innerText = seasonName === 'All' ? "All Destinations" : `${seasonName} Highlights`;
 
-            const exactKey = Object.keys(destinationData).find(
-                key => key.toLowerCase() === searchVal.toLowerCase()
-            );
-
-            if (!exactKey) {
-                const matchesSeasonKeyword = ["summer", "monsoon", "winter", "spring"].includes(searchVal.toLowerCase());
-                if(matchesSeasonKeyword) {
-                    const matchedSeason = searchVal.charAt(0).toUpperCase() + searchVal.slice(1).toLowerCase();
-                    const trackerBtn = document.querySelector(`[data-season="${matchedSeason}"]`);
-                    if(trackerBtn) trackerBtn.classList.add("active");
-                    
-                    recommendationOutput.style.padding = "12px";
-                    recommendationOutput.innerHTML = `
-                        <div style="color: #0F4C81; font-size: 14px; font-weight: 500;">
-                            🌤️ Displaying all destinations whose ideal recommended season is <strong>${matchedSeason}</strong>!
-                        </div>
-                    `;
-                    return;
+            cards.forEach(card => {
+                if (seasonName === "All" || card.dataset.season === seasonName) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
                 }
+            });
+            
+            document.getElementById("homeSectionTitle").scrollIntoView({ behavior: 'smooth' });
+        }
 
-                const fallbackBtn = document.querySelector(`[data-season="${selectedSeasonFilter}"]`);
-                if(fallbackBtn) fallbackBtn.classList.add("active");
-
-                recommendationOutput.style.padding = "12px";
-                recommendationOutput.innerHTML = `
-                    <div style="color: #666; font-size: 14px;">
-                        🔍 Searching data models... Try searching for a specific place or season!
-                    </div>
-                `;
-                return;
-            }
-
-            const targetPlace = destinationData[exactKey];
-            recommendationOutput.style.padding = "16px";
-
-            const targetSeasonBtn = document.querySelector(`[data-season="${targetPlace.season}"]`);
-            if(targetSeasonBtn) targetSeasonBtn.classList.add("active");
-
-            if (maxBudget >= targetPlace.budget) {
-                recommendationOutput.innerHTML = `
-                    <div style="background-color: #e6f4ea; border-left: 5px solid #34a853; padding: 12px; border-radius: 6px; font-size: 14px; color: #137333;">
-                        🎉 <strong>Perfect Match!</strong> Your budget covers the base cost for <strong>${exactKey}</strong>.<br>
-                        🌤️ <strong>Season Recommendation:</strong> We highly recommend visiting during the <strong>${targetPlace.season}</strong> season!
-                    </div>
-                `;
-            } else {
-                recommendationOutput.innerHTML = `
-                    <div style="background-color: #fce8e6; border-left: 5px solid #ea4335; padding: 12px; border-radius: 6px; font-size: 14px; color: #c5221f;">
-                        ⚠️ <strong>Budget Cap Restriction:</strong> Your budget falls short of the required <strong>₹${targetPlace.budget.toLocaleString('en-IN')}</strong> entry baseline.<br>
-                        📉 <strong>Recommendation:</strong> Add an extra <strong>₹${(targetPlace.budget - maxBudget).toLocaleString('en-IN')}</strong> to unlock this destination.
-                    </div>
-                `;
-            }
+        function setSeasonOverride(season) {
+            selectedSeasonFilter = season;
+            document.querySelectorAll('.season-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-season') === season) btn.classList.add('active');
+            });
+            filterPlaces();
         }
 
         function filterPlaces() {
@@ -1168,80 +1008,61 @@
             const state = stateFilter.value;
             const maxBudget = parseInt(budgetRange.value) || 100000;
 
-            handleRecommendations(searchInput.value.trim(), maxBudget);
-
-            const filtered = Object.keys(destinationData).map(key => {
-                const dataObj = destinationData[key];
-                const isOver = dataObj.budget > maxBudget;
-                return {
-                    name: key,
-                    data: dataObj,
-                    isOverBudget: isOver,
-                    deficit: isOver ? (dataObj.budget - maxBudget) : 0
-                };
-            }).filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(search) || item.data.season.toLowerCase().includes(search);
-                const matchState = state === "All" || item.data.state === state;
-                
-                let matchSeasonRow = true;
-                if (selectedSeasonFilter !== "All" && !search) {
-                    matchSeasonRow = item.data.season === selectedSeasonFilter;
-                }
-
-                return matchSearch && matchState && matchSeasonRow;
+            const filtered = destinationData.filter(d => {
+                const matchSearch = d.name.toLowerCase().includes(search);
+                const matchState = state === "All" || d.state === state;
+                const matchSeason = selectedSeasonFilter === "All" || d.season === selectedSeasonFilter;
+                const matchBudget = d.budget <= maxBudget;
+                return matchSearch && matchState && matchSeason && matchBudget;
             });
 
-            displayPlaces(filtered);
-        }
+            destinationContainer.innerHTML = "";
+            resultCount.innerText = `Found ${filtered.length} matching destinations`;
 
-        function goToDetails(placeName) {
-            const place = destinationData[placeName];
-            if (!place) return;
+            if (filtered.length === 0) {
+                destinationContainer.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">No matching destinations within filter metrics.</p>`;
+                return;
+            }
 
-            const detailImg = document.getElementById("placeImage");
-            detailImg.src = place.image;
-            detailImg.alt = placeName;
-
-            document.getElementById("placeName").innerHTML = placeName;
-            document.getElementById("placeState").innerHTML = `📍 State: ${place.state}`;
-            document.getElementById("placeSeason").innerHTML = place.season;
-            document.getElementById("placeBudget").innerHTML = place.budgetText;
-            document.getElementById("placeDescription").innerHTML = place.description;
-
-            showView('details');
-        }
-
-        function buildGallery() {
-            galleryContainer.innerHTML = "";
-            Object.keys(destinationData).forEach(key => {
-                const place = destinationData[key];
-                galleryContainer.innerHTML += `
-                    <div class="image-card" onclick="goToDetails('${key}')">
-                        <img src="${place.image}" alt="${key}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
-                        <div class="image-info">
-                            <h3>${key}</h3>
-                            <p>${place.state}</p>
+            filtered.forEach(place => {
+                destinationContainer.innerHTML += `
+                    <div class="explore-card">
+                        <img src="${place.image_url || DEFAULT_FALLBACK_IMAGE}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
+                        <div class="explore-card-content">
+                            <h3>${place.name}</h3>
+                            <p><strong>📍 State:</strong> ${place.state}</p>
+                            <p><strong>🌤️ Season:</strong> ${place.season}</p>
+                            <p><strong>💰 Budget:</strong> ₹${place.budget.toLocaleString('en-IN')}</p>
+                            <button onclick="viewDetails('${place.name}')">View Details</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // Updated to display all database cards inside the homepage card-container grid elements
-        function buildPopularBanner() {
-            const keys = Object.keys(destinationData);
-            if(keys.length === 0) return;
-            popularContainer.innerHTML = "";
-            
-            keys.forEach(key => {
-                const place = destinationData[key];
-                popularContainer.innerHTML += `
-                    <div class="home-card" onclick="goToDetails('${key}')" data-season="${place.season}">
-                        <img src="${place.image}" alt="${key}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
-                        <div class="home-card-content">
-                            <h3>${key}</h3>
-                            <p>${place.description.substring(0, 75)}...</p>
-                            <div class="price">${place.budgetText}</div>
+        function viewDetails(name) {
+            const place = destinationData.find(d => d.name === name);
+            if (!place) return;
+
+            document.getElementById("placeImage").src = place.image_url || DEFAULT_FALLBACK_IMAGE;
+            document.getElementById("placeName").innerText = place.name;
+            document.getElementById("placeState").innerText = `📍 Location: ${place.state}, India`;
+            document.getElementById("placeSeason").innerText = place.season;
+            document.getElementById("placeBudget").innerText = `₹${place.budget.toLocaleString('en-IN')}`;
+            document.getElementById("placeDescription").innerText = place.description;
+
+            showView('details');
+        }
+
+        function buildGallery() {
+            galleryContainer.innerHTML = "";
+            destinationData.forEach(place => {
+                galleryContainer.innerHTML += `
+                    <div class="image-card" onclick="viewDetails('${place.name}')">
+                        <img src="${place.image_url || DEFAULT_FALLBACK_IMAGE}" onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';">
+                        <div class="image-info">
+                            <h3>${place.name}</h3>
+                            <p>${place.state}</p>
                         </div>
                     </div>
                 `;
@@ -1250,12 +1071,11 @@
 
         dbConsoleForm.addEventListener("submit", async function(e) {
             e.preventDefault();
-            
             const payload = {
                 name: document.getElementById('formName').value.trim(),
                 state: document.getElementById('formState').value.trim(),
                 season: document.getElementById('formSeason').value,
-                budget: parseInt(document.getElementById('formBudget').value),
+                budget: int(document.getElementById('formBudget').value),
                 image_url: document.getElementById('formImageUrl').value.trim(),
                 description: document.getElementById('formDesc').value.trim()
             };
@@ -1276,22 +1096,22 @@
                     await loadDestinationsFromDB();
                     setTimeout(() => { formStatusMessage.style.display = "none"; }, 3000);
                 } else {
-                    throw new Error("Server error writing data.");
+                    throw new Error("Server error.");
                 }
             } catch (err) {
                 formStatusMessage.innerText = "❌ Error processing submission.";
             }
         });
 
-        searchInput.addEventListener("input", filterPlaces);
-        stateFilter.addEventListener("change", filterPlaces);
-        budgetRange.addEventListener("input", () => {
+        searchInput.addEventListener('input', filterPlaces);
+        stateFilter.addEventListener('change', filterPlaces);
+        budgetRange.addEventListener('input', () => {
             budgetRange.dataset.userHasTouched = "true";
             budgetValue.innerText = `₹${parseInt(budgetRange.value).toLocaleString('en-IN')}`;
             filterPlaces();
         });
 
-        document.getElementById("contactForm").addEventListener("submit", function (e) {
+        document.getElementById("contactForm").addEventListener("submit", function(e) {
             e.preventDefault();
             alert("Feedback received successfully!");
             this.reset();
@@ -1300,5 +1120,4 @@
         window.addEventListener('DOMContentLoaded', loadDestinationsFromDB);
     </script>
 </body>
-
 </html>

@@ -1,125 +1,83 @@
 import sys
 import os
 
-# Appending system path mapping configurations to resolve parent model imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from backend import app, db, Destination
 
-bulk_destinations = [
-    # === WINTER DESTINATIONS ===
-    Destination(
-        name="Manali", state="Himachal Pradesh", season="Winter", budget=11000,
-        image_url="https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=1200&q=80",
-        description="A high-altitude resort village along the Beas River valley, offering premium adventure sports like paragliding, Solang Valley ski tours, and heavy winter snow activities."
-    ),
-    Destination(
-        name="Jaipur", state="Rajasthan", season="Winter", budget=8000,
-        image_url="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80",
-        description="The iconic Pink City displays magnificent royal fort lines, intricate architectural designs like the Hawa Mahal, and bustling local heritage bazaar circuits."
-    ),
-    Destination(
-        name="Udaipur", state="Rajasthan", season="Winter", budget=9500,
-        image_url="https://images.unsplash.com/photo-1569949380643-6e7a6ecff340?auto=format&fit=crop&w=1200&q=80",
-        description="Known as the City of Lakes, Udaipur sits around glistening water channels like Lake Pichola where white marble heritage palaces rise directly out of the water surface."
-    ),
-    Destination(
-        name="Gulmarg", state="Jammu & Kashmir", season="Winter", budget=16000,
-        image_url="https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&w=1200&q=80",
-        description="A premier winter ski resort destination featuring the world's highest operating cable car (Gondola), pristine white snow slopes, and sweeping Himalayan valley viewpoints."
-    ),
-    Destination(
-        name="Jaisalmer", state="Rajasthan", season="Winter", budget=8500,
-        image_url="https://images.unsplash.com/photo-1574688461530-580a133e9d8c?auto=format&fit=crop&w=1200&q=80",
-        description="The Golden City rises from the heart of the Thar Desert, boasting a living sandstone fort, sunset camel desert safaris, and overnight dune camp experiences."
-    ),
-    Destination(
-        name="Agra", state="Uttar Pradesh", season="Winter", budget=6000,
-        image_url="https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
-        description="Home to the world-famous Taj Mahal, the magnificent Agra Fort, and historic Mughal architecture, offering a perfect heritage trip during pleasant winter months."
-    ),
-    Destination(
-        name="Varanasi", state="Uttar Pradesh", season="Winter", budget=5500,
-        image_url="https://images.unsplash.com/photo-1561361531-9952a8e3df6a?auto=format&fit=crop&w=1200&q=80",
-        description="One of the world's oldest living cities. Famous for spiritual Ganga Aarti ceremonies, vibrant river ghats, labyrinth street alleys, and grand silk weaving heritages."
-    ),
+# Organized list of 60 unique destinations
+data = [
+    # --- SUMMER ---
+    ("Munnar", "Kerala", "Summer", 8500, "https://images.unsplash.com/photo-1593693411515-c202e974233c"),
+    ("Ooty", "Tamil Nadu", "Summer", 8000, "https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3"),
+    ("Manali", "Himachal Pradesh", "Summer", 11000, "https://images.unsplash.com/photo-1605649487212-47bdab064df7"),
+    ("Kasauli", "Himachal Pradesh", "Summer", 7000, "https://images.unsplash.com/photo-1589483363364-5858e6578794"),
+    ("Coonoor", "Tamil Nadu", "Summer", 7500, "https://images.unsplash.com/photo-1616641775685-618841c7b808"),
+    ("Kodaikanal", "Tamil Nadu", "Summer", 9000, "https://images.unsplash.com/photo-1612623326173-0498305e940a"),
+    ("Dharamshala", "Himachal Pradesh", "Summer", 9500, "https://images.unsplash.com/photo-1591823737606-588426d0e3d2"),
+    ("Shimla", "Himachal Pradesh", "Summer", 9000, "https://images.unsplash.com/photo-1562916170-664453782d96"),
+    ("Mussoorie", "Uttarakhand", "Summer", 8000, "https://images.unsplash.com/photo-1605540436563-5bca919ae762"),
+    ("Horsley Hills", "Andhra Pradesh", "Summer", 6000, "https://images.unsplash.com/photo-1574688461530-580a133e9d8c"),
+    ("Nainital", "Uttarakhand", "Summer", 8500, "https://images.unsplash.com/photo-1589483363364-5858e6578794"),
+    ("Mount Abu", "Rajasthan", "Summer", 7500, "https://images.unsplash.com/photo-1590490359683-65a33d3d7d85"),
+    ("Dalhousie", "Himachal Pradesh", "Summer", 9500, "https://images.unsplash.com/photo-1594964174061-399703657aa7"),
+    ("Chikmagalur", "Karnataka", "Summer", 7000, "https://images.unsplash.com/photo-1602002418082-a4443e081dd1"),
+    ("Yercaud", "Tamil Nadu", "Summer", 6500, "https://images.unsplash.com/photo-1614088031586-173673b0a701"),
+    
+    # --- MONSOON ---
+    ("Lonavala", "Maharashtra", "Monsoon", 6500, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec"),
+    ("Mahabaleshwar", "Maharashtra", "Monsoon", 7000, "https://images.unsplash.com/photo-1615671520603-4f9e0307f596"),
+    ("Ananthagiri Hills", "Telangana", "Monsoon", 5000, "https://images.unsplash.com/photo-1613946069412-38f7f8ff0b6d"),
+    ("Araku Valley", "Andhra Pradesh", "Monsoon", 7000, "https://images.unsplash.com/photo-1561484930-998b6a7b22e8"),
+    ("Wayanad", "Kerala", "Monsoon", 7500, "https://images.unsplash.com/photo-1599940824399-b87987ceb72a"),
+    ("Coorg", "Karnataka", "Monsoon", 7500, "https://images.unsplash.com/photo-1602002418082-a4443e081dd1"),
+    ("Cherrapunji", "Meghalaya", "Monsoon", 12000, "https://images.unsplash.com/photo-1544644181-148f3b0dcdc0"),
+    ("Agumbe", "Karnataka", "Monsoon", 6000, "https://images.unsplash.com/photo-1506744038136-46273834b3fb"),
+    ("Igatpuri", "Maharashtra", "Monsoon", 5500, "https://images.unsplash.com/photo-1615671520603-4f9e0307f596"),
+    ("Kuntala Waterfalls", "Telangana", "Monsoon", 4000, "https://images.unsplash.com/photo-1613946069412-38f7f8ff0b6d"),
+    ("Bhandardara", "Maharashtra", "Monsoon", 6000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec"),
+    ("Athirappilly", "Kerala", "Monsoon", 8000, "https://images.unsplash.com/photo-1623193397690-362cb9666fc2"),
+    ("Matheran", "Maharashtra", "Monsoon", 5000, "https://images.unsplash.com/photo-1615671520603-4f9e0307f596"),
+    ("Udawalawe", "Sri Lanka", "Monsoon", 15000, "https://images.unsplash.com/photo-1590054763901-389f41757134"),
+    ("Udaipur", "Rajasthan", "Monsoon", 9500, "https://images.unsplash.com/photo-1569949380643-6e7a6ecff340"),
 
-    # === SUMMER DESTINATIONS ===
-    Destination(
-        name="Ooty", state="Tamil Nadu", season="Summer", budget=8000,
-        image_url="https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?auto=format&fit=crop&w=1200&q=80",
-        description="Famous for sprawling emerald tea gardens, a pleasant cool summer climate, Nilgiri toy train rides, and calm boat cruises on Ooty Lake."
-    ),
-    Destination(
-        name="Leh Ladakh", state="Jammu & Kashmir", season="Summer", budget=22000,
-        image_url="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=80",
-        description="A high-altitude desert wonderland accessible in summer, characterized by the deep blue Pangong Tso Lake, magnetic hills, and dramatic mountain pass trekking trails."
-    ),
-    Destination(
-        name="Shimla", state="Himachal Pradesh", season="Summer", budget=9000,
-        image_url="https://images.unsplash.com/photo-1562916170-664453782d96?auto=format&fit=crop&w=1200&q=80",
-        description="The former summer capital of British India, offering historic Mall Road walks, colonial architecture tours, and cool mountain breezes away from plains heat."
-    ),
-    Destination(
-        name="Munnar", state="Kerala", season="Summer", budget=8500,
-        image_url="https://images.unsplash.com/photo-1593693411515-c202e974233c?auto=format&fit=crop&w=1200&q=80",
-        description="An idyllic South Indian hill station wrapped in neatly manicured tea plantations, misty mountain peaks, Eravikulam National Park safaris, and cascading waterfalls."
-    ),
-    Destination(
-        name="Darjeeling", state="West Bengal", season="Summer", budget=9500,
-        image_url="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
-        description="Framed by the majestic Kanchenjunga peaks, this scenic hill station is universally prized for premium black tea processing estates and historic UNESCO toy train tracks."
-    ),
+    # --- WINTER ---
+    ("Jaipur", "Rajasthan", "Winter", 8000, "https://images.unsplash.com/photo-1599661046289-e31897846e41"),
+    ("Jaisalmer", "Rajasthan", "Winter", 8500, "https://images.unsplash.com/photo-1574688461530-580a133e9d8c"),
+    ("Hampi", "Karnataka", "Winter", 6500, "https://images.unsplash.com/photo-1600100397608-f010e423b971"),
+    ("Pondicherry", "Puducherry", "Winter", 7000, "https://images.unsplash.com/photo-1589367463456-658b1448b111"),
+    ("Goa", "Goa", "Winter", 12000, "https://images.unsplash.com/photo-1540206395-68808572332f"),
+    ("Agra", "Uttar Pradesh", "Winter", 6000, "https://images.unsplash.com/photo-1564507592333-c60657eea523"),
+    ("Rann of Kutch", "Gujarat", "Winter", 11000, "https://images.unsplash.com/photo-1600100397608-f010e423b971"),
+    ("Varanasi", "Uttar Pradesh", "Winter", 5500, "https://images.unsplash.com/photo-1561361531-9952a8e3df6a"),
+    ("Gokarna", "Karnataka", "Winter", 6000, "https://images.unsplash.com/photo-1589367463456-658b1448b111"),
+    ("Alleppey", "Kerala", "Winter", 10500, "https://images.unsplash.com/photo-1593693397690-362cb9666fc2"),
+    ("Auli", "Uttarakhand", "Winter", 13000, "https://images.unsplash.com/photo-1591823737606-588426d0e3d2"),
+    ("Badami", "Karnataka", "Winter", 5000, "https://images.unsplash.com/photo-1600100397608-f010e423b971"),
+    ("Khajuraho", "Madhya Pradesh", "Winter", 7500, "https://images.unsplash.com/photo-1599661046289-e31897846e41"),
+    ("Mysore", "Karnataka", "Winter", 6000, "https://images.unsplash.com/photo-1600100397608-f010e423b971"),
+    ("Leh", "Ladakh", "Winter", 20000, "https://images.unsplash.com/photo-1596176530529-78163a4f7af2"),
 
-    # === MONSOON DESTINATIONS ===
-    Destination(
-        name="Goa", state="Goa", season="Monsoon", budget=12000,
-        image_url="https://images.unsplash.com/photo-1540206395-68808572332f?auto=format&fit=crop&w=1200&q=80",
-        description="Transforms into a lush green paradise during monsoons, showcasing roaring Dudhsagar Waterfalls, quiet uncrowded beaches, and rain-washed spice plantations."
-    ),
-    Destination(
-        name="Wayanad", state="Kerala", season="Monsoon", budget=7500,
-        image_url="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1200&q=80",
-        description="A monsoon haven featuring misty treehouse resorts, intense green forest canopies, historical Edakkal Caves exploration, and Banasura Sagar dam vistas."
-    ),
-    Destination(
-        name="Lonavala", state="Maharashtra", season="Monsoon", budget=6500,
-        # FIXED: Updated fried chicken image path loop to scenic Western Ghats imagery stream 
-        image_url="https://images.unsplash.com/photo-1584810359583-96fc3448beaa?auto=format&fit=crop&w=1200&q=80",
-        description="A beloved Western Ghats escape that comes alive under heavy rains with surging waterfalls, foggy mountain lookouts like Tiger's Point, and lush trekking trails."
-    ),
-    Destination(
-        name="Alleppey", state="Kerala", season="Monsoon", budget=10500,
-        image_url="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1200&q=80",
-        description="Famous for majestic backwater networks, luxury overnight houseboat cruises, swaying palm-fringed channels, and picturesque traditional green paddy field vistas."
-    ),
-
-    # === SPRING DESTINATIONS ===
-    Destination(
-        name="Coorg", state="Karnataka", season="Spring", budget=7500,
-        image_url="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&w=1200&q=80",
-        description="Famous for blooming spring coffee plantation flowers, misty valleys, Abbey Falls paths, and up-close interactions at the Dubare Elephant Camp."
-    ),
-    Destination(
-        name="Valley of Flowers", state="Uttarakhand", season="Spring", budget=14000,
-        image_url="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
-        description="A UNESCO World Heritage site known for alpine meadows blooming with hundreds of endemic flower species, wild flora trails, and stunning glacier backdrop walls."
-    ),
-    Destination(
-        name="Araku Valley", state="Andhra Pradesh", season="Spring", budget=7000,
-        image_url="https://images.unsplash.com/photo-1561484930-998b6a7b22e8?auto=format&fit=crop&w=1200&q=80",
-        description="A scenic valley escape enriched by blooming spring coffee orchards, local tribal museum histories, Katiki waterfalls, and deep ancient Borra cave networks."
-    ),
-    Destination(
-        name="Hampi", state="Karnataka", season="Spring", budget=6500,
-        image_url="https://images.unsplash.com/photo-1600100397608-f010e423b971?auto=format&fit=crop&w=1200&q=80",
-        description="A dramatic open-air museum landscape of ancient ruins from the historic Vijayanagara Empire, showcasing giant boulder horizons, monolithic shrines, and intricately carved temples."
-    )
+    # --- SPRING ---
+    ("Shillong", "Meghalaya", "Spring", 9000, "https://images.unsplash.com/photo-1544644181-148f3b0dcdc0"),
+    ("Gangtok", "Sikkim", "Spring", 9500, "https://images.unsplash.com/photo-1544644181-148f3b0dcdc0"),
+    ("Srinagar", "Jammu & Kashmir", "Spring", 12000, "https://images.unsplash.com/photo-1596176530529-78163a4f7af2"),
+    ("Yumthang Valley", "Sikkim", "Spring", 11000, "https://images.unsplash.com/photo-1544644181-148f3b0dcdc0"),
+    ("Kasol", "Himachal Pradesh", "Spring", 7000, "https://images.unsplash.com/photo-1605649487212-47bdab064df7"),
+    ("Rishikesh", "Uttarakhand", "Spring", 6000, "https://images.unsplash.com/photo-1589483363364-5858e6578794"),
+    ("Valley of Flowers", "Uttarakhand", "Spring", 14000, "https://images.unsplash.com/photo-1469474968028-56623f02e42e"),
+    ("Mirik", "West Bengal", "Spring", 6500, "https://images.unsplash.com/photo-1544735716-392fe2489ffa"),
+    ("Kalimpong", "West Bengal", "Spring", 7500, "https://images.unsplash.com/photo-1544735716-392fe2489ffa"),
+    ("Palampur", "Himachal Pradesh", "Spring", 7000, "https://images.unsplash.com/photo-1589483363364-5858e6578794"),
+    ("Lansdowne", "Uttarakhand", "Spring", 5500, "https://images.unsplash.com/photo-1605540436563-5bca919ae762"),
+    ("Ziro", "Arunachal Pradesh", "Spring", 9000, "https://images.unsplash.com/photo-1544644181-148f3b0dcdc0"),
+    ("Kaziranga", "Assam", "Spring", 10000, "https://images.unsplash.com/photo-1544644181-148f3b0dcdc0"),
+    ("Tawang", "Arunachal Pradesh", "Spring", 12000, "https://images.unsplash.com/photo-1596176530529-78163a4f7af2"),
+    ("Kullu", "Himachal Pradesh", "Spring", 6500, "https://images.unsplash.com/photo-1605649487212-47bdab064df7")
 ]
 
 with app.app_context():
-    print("Purging storage cache and setting up a clean layout...")
     db.session.query(Destination).delete()
-    
-    db.session.add_all(bulk_destinations)
+    for name, state, season, budget, img in data:
+        db.session.add(Destination(name=name, state=state, season=season, budget=budget, image_url=img, description=f"A beautiful place in {state} perfect for your next trip!"))
     db.session.commit()
-    print(f"🎉 Database Synced Successfully! Added {len(bulk_destinations)} destinations.")
+    print("Database Synced!")
