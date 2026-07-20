@@ -51,7 +51,8 @@ destinations_list = [
     ("Agra", "Uttar Pradesh", "Winter", 6000, "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Taj_Mahal_in_March_2004.jpg/640px-Taj_Mahal_in_March_2004.jpg"),
     ("Rann of Kutch", "Gujarat", "Winter", 11000, "https://www.brahmandtour.com/img/slider/road-trip-to-rann-of-kutch-2.webp"),
     ("Varanasi", "Uttar Pradesh", "Winter", 5500, "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Varanasi_Ghats_Ganga.jpg/640px-Varanasi_Ghats_Ganga.jpg"),
-    ("Udaipur", "Rajasthan", "Winter", 9500, "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3,Udaipur_Lake_Palace.jpg/640px-Udaipur_Lake_Palace.jpg"),
+    # Fixed comma typo here -> changed to forward slash
+    ("Udaipur", "Rajasthan", "Winter", 9500, "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Udaipur_Lake_Palace.jpg/640px-Udaipur_Lake_Palace.jpg"),
     ("Gokarna", "Karnataka", "Winter", 6000, "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Om_Beach_Gokarna.jpg/640px-Om_Beach_Gokarna.jpg"),
     ("Alleppey", "Kerala", "Winter", 10500, "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Alappuzha_Houseboat.jpg/640px-Alappuzha_Houseboat.jpg"),
     ("Auli", "Uttarakhand", "Winter", 13000, "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Auli_Ski_Resort.jpg/640px-Auli_Ski_Resort.jpg"),
